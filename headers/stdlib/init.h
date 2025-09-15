@@ -35,6 +35,7 @@ typedef unsigned long pos_t;
 none __exit(int code);
 none printc(const char ch);
 none print(const str buff);
+none printa(const str *buff);
 none err_n_exit(const str buff, int code);
 
 /* Heap */
@@ -53,6 +54,7 @@ int get_input(str dest, len_t count);
 
 #if defined(STR_H)
 	len_t 	str_len(str buffer);
+	int   	stra(str src, const str sub);
 	bool	str_cmp(const str src, const str needle);
 	pos_t 	find_char(const str buff, const char ch, int match);
 	pos_t 	find_str(const str buff, const str needle);

@@ -38,6 +38,19 @@ bool str_cmp(const str src, const str needle)
 	return true;
 }
 
+int stra(str buff, const str sub) {
+	if(!buff || !sub)
+		return 0;
+
+	len_t src_len = str_len(buff);
+	len_t len = str_len(sub);
+	for(int i = src_len, c = 0; i < len; i++, c++) {
+		buff[i] = sub[c];
+	}
+
+	return 1;
+}
+
 pos_t find_char(const str buff, const char ch, int match)
 {
 	if(!buff || ch == 0)
