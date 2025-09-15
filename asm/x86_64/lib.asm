@@ -5,6 +5,7 @@ global _sys_close
 global _mmap
 global _munmap
 global _syscall
+global _sys_nanosleep
 
 section .text
 
@@ -44,5 +45,10 @@ _mmap:
 
 _munmap:
 	mov rax, 11
+	syscall
+	ret
+
+_sys_nanosleep:
+	mov rax, 35
 	syscall
 	ret

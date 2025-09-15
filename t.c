@@ -18,18 +18,15 @@ typedef enum mmap_map {
 } mmap_map;
 
 typedef struct {
-	int sec, nsec;
-} sleep_t;
-
-typedef struct {
 	int 			size;
 	int 			len;
 	struct chunk 	*next;
 } chunk;
 
 any __heap__;
-static fd_t heapfd;
+fd_t heapfd;
 int DEBUG = 1;
+#include <fcntl.h>
 
 __attribute__((constructor)) void init_heap()
 {
@@ -62,10 +59,13 @@ any allocate(size_t sz, len_t len)
 int main(int argc, char *argv[]) {
 	char BUFFER[1024] = {0};
 	int bytes = get_input(__heap__, 1024);
+
+	// msync
 	_syscall(26, (unsigned long)__heap__, 4095, 4);
 
 	sleep_t sleep = {1, 5000000};
-	_syscall(77, (unsigned long)&sleep, 0, 0);
+	// sys_nanosecond
+	_syscall(35, (unsigned long)&sleep, 0, 0);
 	print("Input: "), print(__heap__);
 
 	char test[] = "Hello World\n";

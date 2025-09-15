@@ -16,5 +16,7 @@ none mem_cpy(any dest, any src, size_t size)
 none mem_set(any ptr, char ch, size_t size)
 {
 	for(int i = 0; i < size; i++)
+	{
 		((char *)ptr)[i] = ch;
+	}
 }

@@ -47,19 +47,36 @@ int get_input(str dest, len_t count);
 
 #if defined(CLIBP)
 	#define STR_H
+	#define ARR_H
+	#define FILE_H
 #endif
 
 #if defined(STR_H)
 	len_t 	str_len(str buffer);
-	bool 	str_cmp(const str src, const str needle);
+	bool	str_cmp(const str src, const str needle);
 	pos_t 	find_char(const str buff, const char ch, int match);
 	pos_t 	find_str(const str buff, const str needle);
 #endif
 
 #if defined(ARR_H)
 	typedef none *arr;
+	int arr_contains(arr args, str *needle);
 #endif
 
 #if defined(FILE_H)
 	typedef unsigned int fd_t;
+
+	typedef enum FILE_MODE {
+		O_WRONLY	    = 01,
+		O_RDWR		    = 02,
+		O_CREAT		   	= 0100,
+		O_EXCL		   	= 0200,
+		O_NOCTTY	   	= 0400,
+		O_TRUNC		  	= 01000
+	} FILE_MODE;
+
+	fd_t	open_file(const char *filename, FILE_MODE mode);
+	int		file_read(fd_t fd, char *buffer, int sz);
+	int		file_write(fd_t fd, const char *buffer, len_t len);
+	void	file_close(fd_t fd);
 #endif
