@@ -2,6 +2,12 @@
 
 all: compile
 
+clean:
+	rm -rf build
+
+dir:
+	mkdir -p build
+
 test:
 	gcc t.c -o build/app \
 	src/*.c \
@@ -19,5 +25,14 @@ compile:
 	nasm -f elf64 asm/x86_64/lib.asm -o build/lib.o
 	gcc t.c -o t \
 	src/*.c \
-	src/stdlib/*.c build/lib.o \
+	src/stdlib/*.c \
+	src/libs/*.c \
+	build/lib.o \
 	-ggdb
+
+cloader:
+	gcc -c syscall.c -o build/syscall.o -nostdlib
+	gcc -static -c linker/gcc_clibp.c -o gcc_clibp.o -nostdlib
+	ld -o gcc_clibp gcc_clibp.o build/lib.o build/syscall.o 
+	echo "\nalias gcc_clibp=\"/home/algo/Documents/GitHub/clibp_v3_0/gcc_clibp\"" > ~/.bashrc
+	bash

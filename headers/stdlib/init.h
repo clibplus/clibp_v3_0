@@ -62,13 +62,14 @@ int get_input(str dest, len_t count);
 
 #if defined(ARR_H)
 	typedef none *arr;
-	int arr_contains(arr args, str *needle);
+	int 	arr_contains(arr args, str *needle);
 #endif
 
 #if defined(FILE_H)
 	typedef unsigned int fd_t;
 
 	typedef enum FILE_MODE {
+		O_RDONLY		= 0,
 		O_WRONLY	    = 01,
 		O_RDWR		    = 02,
 		O_CREAT		   	= 0100,
