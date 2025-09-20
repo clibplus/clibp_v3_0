@@ -17,7 +17,7 @@ len_t str_len(str buffer)
 	return count;
 }
 
-
+// String Compare
 bool str_cmp(const str src, const str needle)
 {
 	if(!src || !needle)
@@ -38,6 +38,7 @@ bool str_cmp(const str src, const str needle)
 	return true;
 }
 
+// String Append
 int stra(str buff, const str sub) {
 	if(!buff || !sub)
 		return 0;
@@ -51,6 +52,7 @@ int stra(str buff, const str sub) {
 	return 1;
 }
 
+// Find Char (to find multiple, increament match each call until -1)
 pos_t find_char(const str buff, const char ch, int match)
 {
 	if(!buff || ch == 0)
@@ -69,6 +71,7 @@ pos_t find_char(const str buff, const char ch, int match)
 	return -1;
 }
 
+// Find String (to find multiple, increament match each call until -1)
 pos_t find_str(const str buff, const str needle)
 {
 	if(!buff || !needle)

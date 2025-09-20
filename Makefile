@@ -8,6 +8,9 @@ clean:
 dir:
 	mkdir -p build
 
+move:
+	cp -r headers/* /usr/local/include
+
 test:
 	gcc t.c -o build/app \
 	src/*.c \
@@ -31,8 +34,7 @@ compile:
 	-ggdb
 
 cloader:
-	gcc -c syscall.c -o build/syscall.o -nostdlib
-	gcc -static -c linker/gcc_clibp.c -o gcc_clibp.o -nostdlib
-	ld -o gcc_clibp gcc_clibp.o build/lib.o build/syscall.o 
-	echo "\nalias gcc_clibp=\"/home/algo/Documents/GitHub/clibp_v3_0/gcc_clibp\"" > ~/.bashrc
-	bash
+	gcc -c bs/syscall.c -o build/syscall.o -nostdlib
+	gcc -c linker/gcc_clibp.c -o gcc_clibp.o -nostdlib
+	gcc -c loader/loader.c -o loader/loader.o -nostdlib
+	ld -o gcc_clibp gcc_clibp.o build/lib.o build/syscall.o

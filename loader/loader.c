@@ -6,7 +6,7 @@
 *
 */
 // Load/Declare Function
-extern void main();
+extern int main();
 
 // Declare External Functions
 static void _stra(int start, char *dest, const char *buff, int sz) {
@@ -96,6 +96,14 @@ void _start() {
     int y = ofread(fd, BUFF, 1024);
     __syscall(8, fd, y, 1, -1, -1, -1);
 
-    main(ARGC, ARGV);
+    int ret = main(ARGC, ARGV);
+    if(ret == 0)
+    {
+        char BUFF[5] = {0};
+        BUFF[0] = '0' + ret;
+        char *g[] = {"[ x ] Error, Exit on ", BUFF, "!\n", 0};
+        __syscall(1, 1, (long)g, 24, -1, -1, -1);
+    }
     ofclose(fd);
+    __syscall(60, 0, -1, -1, -1, -1, -1);
 }
