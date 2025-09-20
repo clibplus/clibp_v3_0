@@ -1,10 +1,6 @@
 #define STR_H
 #include "../../headers/stdlib/init.h"
 
-//str create_string(int sz, int len) {
-//
-//}
-
 len_t str_len(str buffer)
 {
 	if(!buffer)

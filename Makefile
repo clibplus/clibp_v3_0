@@ -26,6 +26,16 @@ count:
 
 compile:
 	nasm -f elf64 asm/x86_64/lib.asm -o build/lib.o
+
+	rm -rf *.o
+	gcc -c src/*.c \
+	src/stdlib/*.c \
+	src/libs/*.c \
+	-nostdlib
+	ar rcs build/libclibp.a *.o
+	ar rcs build/clibp.o *.o
+	rm -rf *.o
+
 	gcc t.c -o t \
 	src/*.c \
 	src/stdlib/*.c \
@@ -34,7 +44,7 @@ compile:
 	-ggdb
 
 cloader:
-	gcc -c bs/syscall.c -o build/syscall.o -nostdlib
 	gcc -c linker/gcc_clibp.c -o gcc_clibp.o -nostdlib
-	gcc -c loader/loader.c -o loader/loader.o -nostdlib
-	ld -o gcc_clibp gcc_clibp.o build/lib.o build/syscall.o
+	gcc -c loader/loader.c -o loader/loader.o -nostdlib -ffunction-sections -Wl,--gc-sections
+	ld -o gcc_clibp gcc_clibp.o build/lib.o
+	rm gcc_clibp.o

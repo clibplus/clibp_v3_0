@@ -1,234 +1,178 @@
-long _sys_read(unsigned int fd, char *buff, unsigned long count);
-long _sys_write(unsigned int fd, const char *buff, unsigned long count);
-long _sys_open(const char *filename, int flags, int mode);
-long _sys_close(unsigned int fd);
-void __syscall(long syscall, long arg1, long arg2, long arg3, long arg4, long arg5, long arg6);
+void _syscall(long, long, long, long);
 
-#define NULL 0
-
-int __ARGS__ = 0;
-char *__ARGV__[100] = {0};
-
-static int str_len(const char *buff) {
+static int _str_len(const char *buffer)
+{
     int count = 0;
-    for(int i = 0; buff[i] != '\0'; i++)
+    for(int i = 0; buffer[i] != '\0'; i++)
+    {
         count++;
+    }
 
     return count;
 }
 
-static void mem_cpy(char *dest, const char *buff, int sz) {
-    for(int i = 0; i < sz; i++) {
-        dest[i] = buff[i];
-    }
-}
-
-static void stra(int start, char *dest, const char *buff, int sz) {
-    for(int i = 0; i < sz; i++) {
-        dest[start + i] = buff[i];
-    }
-}
-
-static int open_file(const char *filename, char *mode)
+static int _mem_cmp(const char *buff, const char *cmp, int sz)
 {
-    int fd = _sys_open(filename, 0, 0);
-    if(fd < 0)
+    for(int i = 0; i < sz; i++)
+    {
+        if(buff[i] != cmp[i])
+            return 0;
+    }
+
+    return 1;
+}
+
+int arr_contains(char **args, int argc, char *needle)
+{
+    if(!args || !needle)
         return -1;
 
-    return fd;
+    for(int i = 0; i < argc; i++) {
+		if(!args[i])
+			break;
+
+        if(_mem_cmp(args[i], needle, _str_len(args[i])))
+            return i;
+	}
+
+    return -1;
 }
 
-static int file_read(int fd, char *buffer, int sz)
+static void _mem_cpy(char *dest, const char *buffer, int len)
 {
-    return _sys_read(fd, buffer, sz);
+    for(int i = 0; i < len; i++)
+    {
+        dest[i] = buffer[i];
+    }
 }
 
-static int file_write(int fd, const char *buffer, int len)
-{
-    return _sys_write(fd, buffer, len);
+int get_pid() {
+    _syscall(39, 0, 0, 0);
+    volatile register long sys asm("rax");
+
+    return sys;
 }
 
-static void file_close(int fd)
-{
-    _sys_close(fd);
+int get_cmd_info(char *buffer) {
+    _syscall(2, (long)"/proc/self/cmdline", 0, 0);
+    register long open asm("rax");
+    if(open <= 0)
+    {
+        return -1;
+    }
+    
+    int fd = open;
+    char BUFFER[255] = {0};
+    _syscall(0, fd, (long)BUFFER, 255);
+    register long bts asm("rax");
+
+    int bytes = bts;
+    _mem_cpy(buffer, BUFFER, bytes);
+
+    _syscall(3, fd, 0, 0);
+    return bytes;
 }
 
-int count_char(const char *buffer, const char ch)
-{
-    int count = -1;
-    for(int i = 0; buffer[i] != '\0'; i++) {
+static int _count_char(const char *buffer, const char ch, int sz) {
+    int count = 0;
+    for(int i = 0; i < sz; i++)
         if(buffer[i] == ch)
             count++;
-    }
 
     return count;
 }
 
-int _count_char(const char *buffer, int len, const char ch) {
-	int count = 0;
-	for(int i = 0; i < len; i++) {
-		if(buffer[i] == ch)
-			count++;
-	}
+static int _find_char(const char *buffer, const char ch, int sz, int match) {
+    int count = 0;
+    for(int i = 0; i < sz; i++) {
+        if(buffer[i] == ch)
+            count++;
 
-	return count;
-}
+        if(count == match)
+            return i;
+    }
 
-int find_char(const char *buffer, int len, int start, const char ch, int match) {
-	if(!buffer || len == 0)
-		return -1;
-
-	int count = 0;
-	for(int i = start; i < len; i++) {
-		if(buffer[i] == ch)
-			count++;
-
-		if(count == match)
-			return i;
-	}
-
-	return -1;
+    return -1;
 }
 
 void print(const char *buff)
 {
-	__syscall(1, 1, (unsigned long)buff, str_len(buff), -1, -1, -1);
-}
-
-int get_pid() {
-	register long p asm("rax") = 39;
-	asm volatile("syscall");
-
-	register long pd asm("rax");
-	int pid = pd;
-
-	return pid;
+	_syscall(1, 1, (unsigned long)buff, _str_len(buff));
 }
 
 void execute(char *app, char **args)
 {
-    if(!app || !args)
-        return;
+	if(!app || !args)
+		return;
 
-    int pid;
-    __syscall(57, -1, -1, -1, -1, -1, -1);
-    register long r asm("rax");
-    pid = r;
+	int pid;
+	_syscall(57, 0, 0, 0);
+	register long r asm("rax");
+	pid = r;
 
-    if(pid == 0)
-    {
-        __syscall(59, (long)app, (long)args, 0, -1, -1, -1);
-    } else if(pid > 0) {
-        __syscall(61, pid, 0, 0, -1, -1, -1);
-    } else {                                                                                                                                                __syscall(1, 1, (long)"fork error\n", 7, -1, -1, -1);
-    }
+	if(pid == 0)
+	{
+		_syscall(59, (long)app, (long)args, 0);
+	} else if(pid > 0) {
+		_syscall(61, pid, 0, 0);
+	} else {
+		_syscall(1, 1, (long)"fork error\n", 7);
+	}
 }
 
-// TODO; Optimize
 void _start() {
-    int ARGC = 0;
-    char *ARGV[50] = {0};
+    int __ARGC__ = 0;
+    char *__ARGV__[100] = {0};
 
-    char path[255] = {0};
-    mem_cpy(path, "/proc/", 6);
-    int sz = 6;
+    char BUFFER[1024] = {0};
+    int count = get_cmd_info(BUFFER);
 
-    register long sysnum asm("rax") = 39;
-    asm volatile("syscall");
+    char *ptr = BUFFER;
+    int test = _count_char(BUFFER, '\0', count);
 
-    register long ppid asm("rax");
+    for(int i = 0, match = 0, last = 0; i < test; i++) {
+        int pos = _find_char(ptr, '\0', count, match++);
+        if(pos == -1)
+            break;
 
-    char buf[255] = {0};
-    int len = 0;
-    long tmp = ppid;
-    do {
-        path[sz + len++] = '0' + tmp % 10;
-        tmp /= 10;
-    } while(tmp);
-
-    for (long i = 0; i < len / 2; i++) {
-        char t = path[sz + i];
-        path[sz + i] = path[sz + len - i - 1];
-        path[sz + len - i - 1] = t;
+        __ARGV__[__ARGC__++] = (char *)(ptr + (pos + 1));
     }
-    sz += len;
 
-    stra(sz, path, buf, len);
+    char *SRC_CODE_FILE = __ARGV__[1];
+    int src_len = _str_len(SRC_CODE_FILE);
+    char *OUTPUT = __ARGV__[3];
 
-    char *ending = "/cmdline";
-    for(int i = 0; i < 8; i++)
-        path[sz + i] = ending[i];
-
-    char BUFF[1024] = {0};
-    int fd = open_file(path, "r");
-    int y = file_read(fd, BUFF, 1024);
-
-	char *ptr = BUFF;
-
-	int offset = 0;
-	for(int i = 0; i < 3; i++) {
-		int next = str_len(ptr) + 1;
-//		mem_cpy(__ARGV__[i], ptr, next);
-		__ARGS__++;
-		ptr += next;
-	}
-
-	for(int i = 0; i < __ARGS__; i++) {
-		__syscall(1, 1, (long)__ARGV__[i], 10, -1, -1, -1);
-	}
-
-    int sec_offset = str_len(ptr); // arg1
-    ptr += sec_offset + 1;
-
-    char SRC_CODE_FILE[20] = {0};
-    mem_cpy(SRC_CODE_FILE, ptr, str_len(BUFF));
-    int src_len = str_len(SRC_CODE_FILE);
-
-	int sec = str_len(ptr) + 1;
-	ptr += sec;
-	sec = str_len(ptr) + 1;
-	ptr += sec;
-
-    char OUTPUT[10] = {0};
-    mem_cpy(OUTPUT, ptr, sec);
-
+	char COPY[255] = {0};
     if(SRC_CODE_FILE[src_len - 1] == 'c') {
 		print("[ + ] Compiling: "), print(SRC_CODE_FILE), print(" to ");
 		print(OUTPUT), print("....!\n");
 
-		char COPY[255] = {0};
-		mem_cpy(COPY, SRC_CODE_FILE, src_len);
+		_mem_cpy(COPY, SRC_CODE_FILE, src_len);
 		COPY[src_len - 1] = 'o';
 
-        char *n[9] = {"/usr/bin/gcc", "-c", SRC_CODE_FILE, "-o", COPY, "-L", "build/syscall.o", "-nostdlib", NULL};
-//        register long rax asm("rax") = 59;
-//        register long rdi asm("rdi") = (long)"/usr/bin/gcc";
-//        register long rsi asm("rsi") = (long)n;
-//        register long rdx asm("rdx") = (long)0;
-		execute(n[0], n);
-
-        asm("syscall");
-		register int ret asm("rax");
-		if(ret < 0)
-			__syscall(1, 1, (long)"Execve Error\n", 12, -1, -1, -1);
+        char *n[8] = {"/usr/bin/gcc", "-c", SRC_CODE_FILE, "-o", COPY, "build/lib.o", "-nostdlib", 0};
+        execute(n[0], n);
     }
 
-	SRC_CODE_FILE[src_len - 1] = 'o';
-    char *n[7] = {"/usr/bin/ld", "-o", OUTPUT, SRC_CODE_FILE, "build/lib.o", "build/syscall.o", NULL};
-//    register long rax asm("rax") = 59;
-//    register long rdi asm("rdi") = (long)"/usr/bin/ld";
-//    register long rsi asm("rsi") = (long)n;
-//    register long rdx asm("rdx") = (long)0;
-	execute(n[0], n);
+	print("[ + ] Linking...!\n");
+    char *n[7] = {
+        "/usr/bin/ld",
+        "-o",
+        OUTPUT,
+		COPY,
+        "build/clibp.o",
+		"build/lib.o",
+        0
+    };
 
-	asm("syscall");
-	register long ret asm("rax");
-	if(ret < 0)
-		__syscall(1, 1, (long)"Execve Error\n", 12, -1, -1, -1);
-	path[0] = '0' + ret;
-	path[1] = '\0';
-	print(path);
+    execute(n[0], n);
 
+	if(arr_contains(__ARGV__, __ARGC__, "--strip") > -1)
+	{
+		print("Stripping....!\n");
+		char *strip[4] = {"/usr/bin/strip", "--strip-unneeded", OUTPUT, 0};
+		execute(strip[0], strip);
+	}
 
-    __syscall(60, 0, -1, -1, -1, -1, -1);
+    _syscall(60, 0, 0, 0);
 }

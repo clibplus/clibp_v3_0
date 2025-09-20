@@ -5,105 +5,110 @@
 *   GCC-CLIBP LOADER
 *
 */
-// Load/Declare Function
-extern int main();
+// Loader's Main Function Declaration
+void main();
 
-// Declare External Functions
-static void _stra(int start, char *dest, const char *buff, int sz) {
-    for(int i = 0; i < sz; i++) {
-        dest[start + i] = buff[i];
-    }
-}
+/* Declare Function from build/lib.o */
+int str_len();
+void mem_cpy();
+void mem_set();
 
+void init_mem();
+void uninit_mem();
+
+/* Declare Function from build/syscall.o */
 void __syscall(long syscall, long arg1, long arg2, long arg3, long arg4, long arg5, long arg6);
 
-void mem_cpy(char *dest, char *src, int size)
+int get_pid() {
+    __syscall(39, -1, -1, -1, -1, -1, -1);
+    volatile register long sys asm("rax");
+    
+    
+    return sys;
+}
+
+__attribute__((used, externally_visible)) void __execute(char *app, char **args)
 {
-	for(int i = 0; i < size; i++)
+	if(!app || !args)
+		return;
+
+	int pid;
+	__syscall(57, -1, -1, -1, -1, -1, -1);
+	register long r asm("rax");
+	pid = r;
+
+	if(pid == 0)
 	{
-		((char *)dest)[i] = ((char *)src)[i];
+		__syscall(59, (long)app, (long)args, 0, -1, -1, -1);
+	} else if(pid > 0) {
+		__syscall(61, pid, 0, 0, -1, -1, -1);
+	} else {
+		__syscall(1, 1, (long)"fork error\n", 7, -1, -1, -1);
 	}
 }
 
-int ofile(const char *filename, int mode)
-{
-    __syscall(2, (long)filename, (long)mode, 0, -1, -1, -1);
-    register long fd asm("rax");
-    if(fd < 0)
+static int get_cmd_info(char *buffer) {
+    __syscall(2, (long)"/proc/self/cmdline", 0, 0, -1, -1, -1);
+    register long open asm("rax");
+    if(open <= 0)
+    {
         return -1;
+    }
+    
+    int fd = open;
+    char BUFFER[255] = {0};
+    __syscall(0, fd, (long)BUFFER, 255, -1, -1, -1);
+    register long bts asm("rax");
 
-    return fd;
-}
+    int bytes = bts;
+    mem_cpy(buffer, BUFFER, bytes);
 
-int ofread(int fd, char *buffer, int sz)
-{
-    __syscall(0, (long)fd, (long)buffer, (long)sz, -1, -1, -1);
-    register long ret asm("rax");
-    return ret;
-}
-
-int ofwrite(int fd, const char *buffer, int len)
-{
-    __syscall(1, (long)fd, (long)buffer, (long)len, -1, -1, -1);
-    register long ret asm("rax");
-    return ret;
-}
-
-void ofclose(int fd)
-{
     __syscall(3, fd, -1, -1, -1, -1, -1);
+    return bytes;
+}
+
+static int _count_char(const char *buffer, const char ch, int sz) {
+    int count = 0;
+    for(int i = 0; i < sz; i++)
+        if(buffer[i] == ch)
+            count++;
+
+    return count;
+}
+
+static int _find_char(const char *buffer, const char ch, int sz, int match) {
+    int count = 0;
+    for(int i = 0; i < sz; i++) {
+        if(buffer[i] == ch)
+            count++;
+
+        if(count == match)
+            return i;
+    }
+
+    return -1;
+}
+
+int get_args(char *argv[]) {
+    int args = 0;
+    char BUFFER[1024] = {0};
+    int count = get_cmd_info(BUFFER);
+
+    char *ptr = BUFFER;
+    int test = _count_char(BUFFER, '\0', count);
+
+    for(int i = 0, match = 0, last = 0; i < test; i++) {
+        int pos = _find_char(ptr, '\0', count, match++);
+        if(pos == -1)
+            break;
+
+        argv[args++] = (char *)(ptr + (pos + 1));
+    }
+
+    return args;
 }
 
 void _start() {
-    int ARGC = 0;
-    char *ARGV[50] = {0};
-
-    char path[255] = {0};
-    mem_cpy(path, "/proc/", 6);
-    int sz = 6;
-    
-    register long sysnum asm("rax") = 39;
-    asm volatile("syscall");
-
-    register long ppid asm("rax");
-
-    char buf[255] = {0};
-    int len = 0;
-    long tmp = ppid;
-    do {
-        path[sz + len++] = '0' + tmp % 10;
-        tmp /= 10;
-    } while(tmp);
-    
-    for (long i = 0; i < len / 2; i++) {
-        char t = path[sz + i];
-        path[sz + i] = path[sz + len - i - 1];
-        path[sz + len - i - 1] = t;
-    }
-    sz += len;
-    path[sz] = '\0';
-
-    _stra(sz, path, buf, len);
-    path[sz] = '/';
-
-    char *ending = "/cmdline";
-    for(int i = 0; i < 8; i++)
-        path[sz + i] = ending[i];
-
-    char BUFF[1024] = {0};
-    int fd = ofile(path, 0);
-
-    int y = ofread(fd, BUFF, 1024);
-    __syscall(8, fd, y, 1, -1, -1, -1);
-
-    int ret = main(ARGC, ARGV);
-    if(ret == 0)
-    {
-        char BUFF[5] = {0};
-        BUFF[0] = '0' + ret;
-        char *g[] = {"[ x ] Error, Exit on ", BUFF, "!\n", 0};
-        __syscall(1, 1, (long)g, 24, -1, -1, -1);
-    }
-    ofclose(fd);
+    main();
     __syscall(60, 0, -1, -1, -1, -1, -1);
 }

@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../x86_64.h"
+#include "../registers.h"
+#include "../allocator.h"
 
 /* Any Type */
 typedef void *any;
@@ -32,14 +34,35 @@ typedef unsigned long pos_t;
 		#include "../x86_64.h"
 #endif
 
+void __syscall(long syscall, long arg1, long arg2, long arg3, long arg4, long arg5, long arg6);
+
+int get_args(char *argv[]);
+
+/* Unviersal Memory Function(s) */
+#if defined(_STANDARD_MEM_SZ_)
+        #define _HEAP_PAGE_SZ_ 4096
+#elif defined(_LARGE_MEM_SZ_)
+        #define _HEAP_PAGE_SZ_ 4096 * 2
+#endif
+
+typedef void *heap_t;
+typedef void *any;
+typedef char *str;
+
+extern heap_t _HEAP_;
+
 none __exit(int code);
 none printc(const char ch);
+none printi(int num);
+none _printi(int value);
 none print(const str buff);
+none printsz(const str buff, int sz);
 none printa(const str *buff);
 none err_n_exit(const str buff, int code);
 
 /* Heap */
 none memzero(any ptr, size_t);
+int mem_cmp(const str buffer, const str cmp, int sz);
 none mem_cpy(any dest, any src, size_t size);
 none mem_set(any ptr, char ch, size_t size);
 
@@ -62,7 +85,7 @@ int get_input(str dest, len_t count);
 
 #if defined(ARR_H)
 	typedef none *arr;
-	int 	arr_contains(arr args, str *needle);
+	int 	arr_contains(arr args, str needle);
 #endif
 
 #if defined(FILE_H)
@@ -79,6 +102,7 @@ int get_input(str dest, len_t count);
 	} FILE_MODE;
 
 	fd_t	open_file(const char *filename, FILE_MODE mode);
+	int		file_content_length(fd_t fd);
 	int		file_read(fd_t fd, char *buffer, int sz);
 	int		file_write(fd_t fd, const char *buffer, len_t len);
 	void	file_close(fd_t fd);

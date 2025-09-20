@@ -1,13 +1,13 @@
-#define ARR_H
+#define CLIBP
 #include "../../headers/stdlib/init.h"
 
-int arr_contains(arr args, str *needle)
+int arr_contains(arr args, str needle)
 {
 	if(!args || !needle)
         return -1;
 
     for(int i = 0; ((char *)args)[i] != NULL; i++)
-        if((char *)((char **)args)[i] == ((char *)needle))
+        if(mem_cmp(((char **)args)[i], needle, str_len(((char **)args)[i])))
             return i;
 
     return -1;
