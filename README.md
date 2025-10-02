@@ -1,2 +1,13 @@
-# clibp v3
-The official minimal C backend replacing GLIBC
+<div align="center">
+	<h1>clibp v3.0</h1>
+	<p>The official minimal C backend alternative to GLIBC</p>
+</div>
+
+# Installation
+
+Run the following commands to install the library!
+```bash
+sudo apt install make;
+git clone https://github.com/clibplus/clibp_v3_0.git
+cd cdlib_v3_0; make; make cloader
+```
