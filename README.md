@@ -3,7 +3,11 @@
 	<p>The official minimal C backend alternative to GLIBC</p>
 </div>
 
+This library is still in development!
+
 # Installation
+
+- Currently; Local Install Use Only
 
 Run the following commands to install the library!
 ```bash
