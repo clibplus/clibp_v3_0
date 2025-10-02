@@ -1,3 +1,7 @@
+/*
+
+	Get Command Arguments From Linux
+*/
 #define NULL 0
 #define CLIBP
 int str_len();

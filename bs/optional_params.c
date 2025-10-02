@@ -94,16 +94,3 @@ void _sys_(long syscall, x86_64_registers regs) {
 
 #define sys(syscall, ...) \
     _sys_(syscall, (x86_64_registers){ __VA_ARGS__ })
-
-int main(void) {
-    my_main();
-    char BUFF[50] = {0};
-    BUFF[0] = 'H';
-    BUFF[1] = 'i';
-    BUFF[2] = '\n';
-    _syscall(1, 1, (long)BUFF, 3, -1, -1, -1);
-    _syscall(60, 0, -1, -1, -1, -1, -1);
-    // sys(1, .rdi = 1, .rsi = (long)BUFF, .rdx = 3);
-    // sys(60, .rdi = 0);
-    return 0;
-}
