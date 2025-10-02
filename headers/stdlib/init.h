@@ -62,7 +62,7 @@ none err_n_exit(const str buff, int code);
 
 /* Heap */
 none memzero(any ptr, size_t);
-int mem_cmp(const str buffer, const str cmp, int sz);
+int mem_cmp(any src, any ptr, size_t size);
 none mem_cpy(any dest, any src, size_t size);
 none mem_set(any ptr, char ch, size_t size);
 

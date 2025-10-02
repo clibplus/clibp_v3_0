@@ -1,35 +1,45 @@
 #define CLIBP
 #define __X86_64_SYSCALLS__
+#define _STANDARD_MEM_SZ_
 #include "headers/stdlib/init.h"
 #include "headers/registers.h"
 #include "headers/x86_64.h"
-
+#include "headers/allocator.h"
+#include "headers/stdlib/init.h"
 #define SERVER_APP
 
-int main(int argc, char *argv[])
+void entry(int argc, char *argv[])
 {
-    init_mem();
+	HEAP_DEBUG = 1;
+	init_mem();
     if(!__is_heap_init__())
     {
         print("ERROR\n");
     }
-	fd_t fd = open_file("fag.c", O_RDONLY);
-	if(fd < 0)
+
+	fd_t fd = open_file("g.c", O_RDONLY);
+	if(fd <= 0)
 	{
 		print("[ x ] Error, Unable to open file...!\n");
-		return 1;
+		__exit(1);
 	}
 
 	print("[ + ] Open File: "), printi(fd), print("\n");
 	int size = file_content_length(fd);
     print("Content Length: "), _printi(size), print("\n");
 
-	str test = allocate(0, size);
+	print("Allocating....\n");
+	str test = allocate(0, size + 1);
     if(test == NULL) {
         print("[ - ] Error, Unable to allocate memory...!\n");
-        return 1;
+		__exit(1);
     }
+    print("[ + ] Reading....\n");
 	file_read(fd, test, size);
+
+	int c = str_len(test);
+	print("Len: "), printi(c);
+
 	print(test), print("\n");
 
 
@@ -39,6 +49,6 @@ int main(int argc, char *argv[])
 	// }
 
 	pfree(test);
-    uninit_mem();
-	return 0;
+	__exit(0);
+	uninit_mem();
 }

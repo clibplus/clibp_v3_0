@@ -4,7 +4,7 @@
 
 fd_t open_file(const char *filename, FILE_MODE mode)
 {
-    fd_t fd = _sys_open(filename, mode, 0);
+    int fd = _sys_open(filename, mode, 0);
     if(fd < 0)
         return -1;
 

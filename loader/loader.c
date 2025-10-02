@@ -6,7 +6,7 @@
 *
 */
 // Loader's Main Function Declaration
-void main();
+void entry();
 
 /* Declare Function from build/lib.o */
 int str_len();
@@ -109,6 +109,6 @@ int get_args(char *argv[]) {
 }
 
 void _start() {
-    main();
+    entry();
     __syscall(60, 0, -1, -1, -1, -1, -1);
 }

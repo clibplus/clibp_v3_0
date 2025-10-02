@@ -15,7 +15,7 @@
 	#define _HEAP_PAGE_SZ_ 1024 * 32
 #elif defined(_MAX_ARDUINO_CHIP_)
 	/* 256 KB */
-	#define _HEAP_AGEP_SZ_ 1024 * 256
+	#define _HEAP_PAGE_SZ_ 1024 * 256
 #endif
 
 typedef void *heap_t;
@@ -23,6 +23,7 @@ typedef void *any;
 typedef char *str;
 
 extern heap_t _HEAP_;
+extern int HEAP_DEBUG;
 
 void init_mem();
 void uninit_mem();

@@ -60,7 +60,7 @@ int get_cmd_info(char *buffer) {
     {
         return -1;
     }
-    
+
     int fd = open;
     char BUFFER[255] = {0};
     _syscall(0, fd, (long)BUFFER, 255);
@@ -150,7 +150,7 @@ void _start() {
 		_mem_cpy(COPY, SRC_CODE_FILE, src_len);
 		COPY[src_len - 1] = 'o';
 
-        char *n[8] = {"/usr/bin/gcc", "-c", SRC_CODE_FILE, "-o", COPY, "build/lib.o", "-nostdlib", 0};
+        char *n[7] = {"/usr/bin/gcc", "-c", SRC_CODE_FILE, "-o", COPY, "-nostdlib", 0};
         execute(n[0], n);
     }
 
