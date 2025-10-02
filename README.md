@@ -7,11 +7,29 @@ This library is still in development!
 
 # Installation
 
-- Currently; Local Install Use Only
+- Currently; Local install use only for development
 
 Run the following commands to install the library!
 ```bash
 sudo apt install make;
 git clone https://github.com/clibplus/clibp_v3_0.git
 cd cdlib_v3_0; make; make cloader
+```
+
+# Standard Lib Use
+
+```c
+#define CLIBP
+<headers/init.h>
+
+void entry() {
+
+}
+```
+
+# Compile w/ CLIBP
+
+### Linux Linker
+```c
+./gcc_clibp <*.c> -o <output
 ```
