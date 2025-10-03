@@ -23,7 +23,7 @@ cd cdlib_v3_0; make; make cloader
 <headers/init.h>
 
 void entry() {
-
+	print("Hello World");
 }
 ```
 
@@ -31,5 +31,5 @@ void entry() {
 
 ### Linux Linker
 ```c
-./gcc_clibp <*.c> -o <output
+./gcc_clibp <*.c> -o <output>
 ```
