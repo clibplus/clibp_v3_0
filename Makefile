@@ -12,10 +12,9 @@ move:
 	cp -r headers/* /usr/local/include
 
 test:
-	gcc t.c -o build/app \
-	src/*.c \
-	src/stdlib/*.c build/lib.o \
-	-ggdb
+	gcc -nostdlib t.c -o build/app \
+	src/*.c src/**/*.c \
+	build/lib.o
 
 count:
 	wc -l t.c \
@@ -36,12 +35,12 @@ compile:
 	ar rcs build/clibp.o *.o
 	rm -rf *.o
 
-	gcc t.c -o t \
-	src/*.c \
-	src/stdlib/*.c \
-	src/libs/*.c \
-	build/lib.o \
-	-ggdb
+#	gcc t.c -o t \
+#	src/*.c \
+#	src/stdlib/*.c \
+#	src/libs/*.c \
+#	build/lib.o \
+#	-ggdb
 
 cloader:
 	gcc -c linker/gcc_clibp.c -o gcc_clibp.o -nostdlib

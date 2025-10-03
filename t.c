@@ -8,7 +8,7 @@
 #include "headers/stdlib/init.h"
 #define SERVER_APP
 
-void entry(int argc, char *argv[])
+void entry()
 {
 	HEAP_DEBUG = 1;
 	init_mem();
@@ -17,7 +17,7 @@ void entry(int argc, char *argv[])
         print("ERROR\n");
     }
 
-	fd_t fd = open_file("g.c", O_RDONLY);
+	fd_t fd = open_file("t.c", O_RDONLY);
 	if(fd <= 0)
 	{
 		print("[ x ] Error, Unable to open file...!\n");
