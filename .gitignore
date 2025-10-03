@@ -1,5 +1,5 @@
-
 t
-t.c
-__heap__
+*.o
+*.a
 *.swp
+build/*
