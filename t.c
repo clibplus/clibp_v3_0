@@ -1,10 +1,7 @@
 #define CLIBP
 #define __X86_64_SYSCALLS__
+
 #define _STANDARD_MEM_SZ_
-#include "headers/stdlib/init.h"
-#include "headers/registers.h"
-#include "headers/x86_64.h"
-#include "headers/allocator.h"
 #include "headers/stdlib/init.h"
 #define SERVER_APP
 
@@ -49,6 +46,6 @@ void entry()
 	// }
 
 	pfree(test);
-	__exit(0);
 	uninit_mem();
+	__exit(0);
 }

@@ -7,7 +7,6 @@
 */
 #pragma once
 
-#include "../x86_64.h"
 #include "../registers.h"
 #include "../allocator.h"
 
@@ -32,6 +31,22 @@ typedef unsigned long pos_t;
 		#include "../x86.h"
 #elif defined(ARCH_SYSCALL) && defined(__x86_64__)
 		#include "../x86_64.h"
+#endif
+
+#if defined(__FORCE_X86__)
+	#undef ARCH_SYSCALL
+	#undef __x86_64__
+	
+	#define __x86__
+	#include "../x86.h"
+#elif #defined(__FORCE_X86_64__)
+	#undef ARCH_SYSCALL
+	#undef __x86__
+
+	#define __x64_84__
+	#include "../x86_64.h
+
+	#edfine 
 #endif
 
 void __syscall(long syscall, long arg1, long arg2, long arg3, long arg4, long arg5, long arg6);
