@@ -1,4 +1,4 @@
-#include "../headers/stdlib/init.h"
+#include "../headers/clibp.h"
 
 static void _mem_cpy(char *dest, const char *buffer, int len)
 {

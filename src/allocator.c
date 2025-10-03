@@ -1,13 +1,13 @@
 #define _STANDARD_MEM_SZ_
-#include "../headers/stdlib/init.h"
-#include "../headers/allocator.h"
+
+#include "../headers/clibp.h"
 
 heap_t _HEAP_ = NULL;
 static int used_mem = 0;
 int HEAP_DEBUG = 0;
 
 void init_mem() {
-	__syscall(9, 0, _HEAP_PAGE_SZ_, 0x01 | 0x02, 0x02 | 0x20, -1, 0);
+	__syscall(_SYS_MMAP, 0, _HEAP_PAGE_SZ_, 0x01 | 0x02, 0x02 | 0x20, -1, 0);
 	register long ret asm("rax");
 	_HEAP_ = (heap_t)ret;
 	if(_HEAP_ < 0)
@@ -89,6 +89,7 @@ void pfree(any ptr) {
 	any original = (char *)ptr - 4;
 	int sz = ((char *)ptr - 4)[0];
 	int len = ((char *)ptr - 4)[1];
+	print("Chunk Size: "), _printi(len);
 	mem_set(original, 0, (!sz ? len : sz * len) + 4);
 	used_mem -= (!sz ? len : sz * len) + 4;
 }

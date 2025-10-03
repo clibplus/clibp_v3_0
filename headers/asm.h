@@ -5,8 +5,12 @@
 */
 #pragma once
 
+typedef struct {
+    int sec, nsec;
+} sleep_t;
+
 /*
-	Basic Function Created in ASM
+	Basic ASM Pre-made Functions
 
 	Must adjust upon *.asm file edits!
 */
@@ -21,7 +25,7 @@
 	extern void _sys_nanosleep(sleep_t *rqtp, sleep_t *rmtp);
 #endif
 
-#if defined(__x86__)
+#if defined(___x86___)
 	#define _SYS_EXIT 					1
 	#define _SYS_FORK					2
 	#define _SYS_READ					3
@@ -462,7 +466,7 @@
 	#define SYS_PROCESS_MRELEASE        448
 	#define SYS_FUTEX_WAITV     		449
 	#define SET_MEMPOLICY_HOME_NOD		-1
-#elif defined(__x86_64__)
+#elif defined(___x86_64___)
     #define _SYS_READ                   0
     #define _SYS_WRITE                  1
     #define _SYS_OPEN                   2
@@ -801,7 +805,7 @@
     #define PKEY_MPROTECT2              335
 #endif
 
-#if defined(__x86__)
+#if defined(___x86___)
     // C Calling Conventions
     #define __EAX__ "eax"
     #define __EBX__ "ebx"
@@ -812,7 +816,7 @@
 
     #define __EBP__ "ebp"
     #define __ESP__ "esp"
-#elif defined(__x86_64__)
+#elif defined(___x86_64___)
     // C Calling Conventions
     #define __RAX__ "rax"
     #define __RDI__ "rdi"

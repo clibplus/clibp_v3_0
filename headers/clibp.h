@@ -7,8 +7,24 @@
 */
 #pragma once
 
-#include "../registers.h"
-#include "../allocator.h"
+/*
+    Auto Architecture Detection
+
+    Disable by using DISABLE_AUTO_ARCH_DET
+    followed by a specific architecture for compilation
+*/
+#if !defined(DISABLE_AUTO_ARCH_DET)
+    #if defined(__i386__)
+            #define ___x86___ "x86"
+            #include "asm.h"
+    #endif
+    #if defined(__x86_64__)
+            #define ___x86_64___
+            #include "asm.h"
+    #endif
+#endif
+
+#include "allocator.h"
 
 /* Any Type */
 typedef void *any;
@@ -25,29 +41,6 @@ typedef void *fn_t;
 typedef unsigned long size_t;
 typedef unsigned long len_t;
 typedef unsigned long pos_t;
-
-#define ARCH_SYSCALL
-#if defined(ARCH_SYSCALL) && defined(__x86__)
-		#include "../x86.h"
-#elif defined(ARCH_SYSCALL) && defined(__x86_64__)
-		#include "../x86_64.h"
-#endif
-
-#if defined(__FORCE_X86__)
-	#undef ARCH_SYSCALL
-	#undef __x86_64__
-	
-	#define __x86__
-	#include "../x86.h"
-#elif #defined(__FORCE_X86_64__)
-	#undef ARCH_SYSCALL
-	#undef __x86__
-
-	#define __x64_84__
-	#include "../x86_64.h
-
-	#edfine 
-#endif
 
 void __syscall(long syscall, long arg1, long arg2, long arg3, long arg4, long arg5, long arg6);
 
@@ -84,6 +77,7 @@ none mem_set(any ptr, char ch, size_t size);
 /* Global Functions */
 int get_input(str dest, len_t count);
 
+#define CLIBP
 #if defined(CLIBP)
 	#define STR_H
 	#define ARR_H

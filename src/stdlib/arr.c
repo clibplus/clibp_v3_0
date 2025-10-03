@@ -1,5 +1,5 @@
 #define CLIBP
-#include "../../headers/stdlib/init.h"
+#include "../../headers/clibp.h"
 
 int arr_contains(arr args, str needle)
 {

@@ -1,5 +1,5 @@
 #define STR_H
-#include "../../headers/stdlib/init.h"
+#include "../../headers/clibp.h"
 
 len_t str_len(str buffer)
 {

@@ -1,4 +1,4 @@
-#include "../headers/stdlib/init.h"
+#include "../headers/clibp.h"
 
 none memzero(any ptr, size_t size)
 {

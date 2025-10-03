@@ -1,6 +1,6 @@
 #define CLIBP
 #define __X86_64_SYSCALLS__
-#include "../../headers/stdlib/init.h"
+#include "../../headers/clibp.h"
 
 fd_t open_file(const char *filename, FILE_MODE mode)
 {

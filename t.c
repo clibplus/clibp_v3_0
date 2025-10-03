@@ -1,9 +1,11 @@
-#define CLIBP
-#define __X86_64_SYSCALLS__
 
-#define _STANDARD_MEM_SZ_
-#include "headers/stdlib/init.h"
-#define SERVER_APP
+#define _STANDARD_MEM_SZ_		// Standard Heap Cap
+#define DISABLE_AUTO_ARCH_DET	// Disable Arch Auto Detection
+#define ___x86___				// Force to use x86
+#include "headers/clibp.h"		// Include CLIBP
+
+/* Keep Types Stored */
+#define SERVER_APP				// Keep All TYPES stored in metadata
 
 void entry()
 {

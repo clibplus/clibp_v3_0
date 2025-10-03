@@ -1,6 +1,6 @@
 #define STR_H
-#include "../headers/stdlib/init.h"
-#include "../headers/x86_64.h"
+#include "../headers/clibp.h"
+#include "../headers/asm.h"
 
 none __exit(int code)
 {
