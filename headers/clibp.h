@@ -26,56 +26,55 @@
 
 #include "allocator.h"
 
-/* Any Type */
-typedef void *any;
-
 /* Some Built-in Types */
-#define NULL 0
-#define bool int
-#define true 1
-#define false 0
+#define NULL 			0
+#define bool 			int
+#define true 			1
+#define false 			0
 
-typedef void none;
-typedef char *str;
-typedef void *fn_t;
-typedef unsigned long size_t;
-typedef unsigned long len_t;
-typedef unsigned long pos_t;
+typedef char 			i8;
+typedef short 			i16;
+typedef int 			i32;
 
+typedef unsigned char 	u8;
+typedef unsigned short 	u16;
+typedef unsigned int	u32;
+
+typedef void 			none;
+typedef void 			*any;
+typedef char 			*str;
+typedef void 			*fn_t;
+
+typedef unsigned long 	size_t;
+typedef unsigned long 	len_t;
+typedef unsigned long 	pos_t;
+
+/* Heap Declaration */
+typedef void 			*heap_t;
+extern heap_t 			_HEAP_;
+
+/* Global Function Declaraction */
 void __syscall(long syscall, long arg1, long arg2, long arg3, long arg4, long arg5, long arg6);
 
-int get_args(char *argv[]);
+// Get Start-up App Cmdline Arguments
+int 	get_args(char *argv[]);
 
-/* Unviersal Memory Function(s) */
-#if defined(_STANDARD_MEM_SZ_)
-        #define _HEAP_PAGE_SZ_ 4096
-#elif defined(_LARGE_MEM_SZ_)
-        #define _HEAP_PAGE_SZ_ 4096 * 2
-#endif
+none 	__exit(int code);
+none 	printc(const char ch);
+none 	printi(int num);
+none 	_printi(int value);
+none 	print(const str buff);
+none 	printsz(const str buff, int sz);
+none 	printa(const str *buff);
+none 	err_n_exit(const str buff, int code);
 
-typedef void *heap_t;
-typedef void *any;
-typedef char *str;
+/* General memory functions */
+none 	memzero(any ptr, size_t);
+int 	mem_cmp(any src, any ptr, size_t size);
+none 	mem_cpy(any dest, any src, size_t size);
+none 	mem_set(any ptr, char ch, size_t size);
 
-extern heap_t _HEAP_;
-
-none __exit(int code);
-none printc(const char ch);
-none printi(int num);
-none _printi(int value);
-none print(const str buff);
-none printsz(const str buff, int sz);
-none printa(const str *buff);
-none err_n_exit(const str buff, int code);
-
-/* Heap */
-none memzero(any ptr, size_t);
-int mem_cmp(any src, any ptr, size_t size);
-none mem_cpy(any dest, any src, size_t size);
-none mem_set(any ptr, char ch, size_t size);
-
-/* Global Functions */
-int get_input(str dest, len_t count);
+int 	get_input(str dest, len_t count);
 
 #define CLIBP
 #if defined(CLIBP)
@@ -93,7 +92,7 @@ int get_input(str dest, len_t count);
 #endif
 
 #if defined(ARR_H)
-	typedef none *arr;
+	typedef any *arr;
 	int 	arr_contains(arr args, str needle);
 #endif
 
@@ -101,18 +100,76 @@ int get_input(str dest, len_t count);
 	typedef unsigned int fd_t;
 
 	typedef enum FILE_MODE {
-		O_RDONLY		= 0,
-		O_WRONLY	    = 01,
-		O_RDWR		    = 02,
-		O_CREAT		   	= 0100,
+		O_RDONLY		= 0,		// Read
+		O_WRONLY	    = 01,		// Write
+		O_RDWR		    = 02,		// Read-Write
+		O_CREAT		   	= 0100,		// Create
 		O_EXCL		   	= 0200,
 		O_NOCTTY	   	= 0400,
-		O_TRUNC		  	= 01000
+		O_TRUNC		  	= 01000		// Truncate
 	} FILE_MODE;
 
+	/*
+		[@DOC]
+			fd_t open_file(const char *filename, FILE_MODE mode);
+
+			Desc;
+				open a file stream
+
+			return;
+				>0 on sucess
+				-1 on fail
+	*/
 	fd_t	open_file(const char *filename, FILE_MODE mode);
-	int		file_content_length(fd_t fd);
+
+	/*
+		[@DOC]
+			int file_content_size(fd_t fd);
+
+			Desc;
+				get file size
+
+			return;
+				>0 on success
+				-1 on fail
+	*/
+	int		file_content_size(fd_t fd);
+
+	/*
+		[@DOC]
+			int file_read(fd_t fd, char *buffer, int sz);
+
+			Desc;
+				get file content
+
+			return;
+				>0 on scuess
+				<=0 on fail
+	*/
 	int		file_read(fd_t fd, char *buffer, int sz);
+
+	/* file_read for unsigned char */
+	#define file_uc_read(fd, buff, sz) file_read
+
+	/*
+		[@DOC]
+			int file_write(fd_t fd, const char *buffer, len_t len);
+
+			Desc;
+				write to file
+
+			return;
+				>0 on success
+				-1 on fail
+	*/
 	int		file_write(fd_t fd, const char *buffer, len_t len);
+
+	/*
+		[@DOC]
+			int file_close(fd_t fd, const char *buffer, len_t len);
+
+			Desc;
+				close file
+	*/
 	void	file_close(fd_t fd);
 #endif

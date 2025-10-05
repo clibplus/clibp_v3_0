@@ -64,8 +64,7 @@ static int _find_char(const char *buffer, const char ch, int sz, int match) {
 int get_pid() {
     _syscall(39, 0, 0, 0);
     volatile register long sys asm("rax");
-    
-    
+
     return sys;
 }
 

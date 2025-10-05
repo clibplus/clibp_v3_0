@@ -1,4 +1,3 @@
-#define CLIBP
 #include "../../headers/clibp.h"
 
 int arr_contains(arr args, str needle)

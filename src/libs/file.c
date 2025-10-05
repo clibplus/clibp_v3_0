@@ -1,17 +1,18 @@
-#define CLIBP
-#define __X86_64_SYSCALLS__
 #include "../../headers/clibp.h"
 
 fd_t open_file(const char *filename, FILE_MODE mode)
 {
     int fd = _sys_open(filename, mode, 0);
+    if(fd == -2)
+		print("[ - ] Error, No file or directory\n");
+
     if(fd < 0)
         return -1;
 
     return fd;
 }
 
-int file_content_length(fd_t fd)
+int file_content_size(fd_t fd)
 {
 	_syscall(_SYS_LSEEK, fd, 0, 2);
 	register long sz asm("rax");

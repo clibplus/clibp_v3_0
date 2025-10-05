@@ -163,13 +163,14 @@ void _start() {
 
 	char *OUTPUT = __ARGV__[3];
 	print("[ + ] Linking to "), print(OUTPUT), print("....!\n");
-    char *n[7] = {
+    char *n[8] = {
         "/usr/bin/ld",
+		"--no-relax",
         "-o",
         OUTPUT,
 		COPY,
         "build/clibp.o",
-		"build/lib.o",
+		"build/x86_64.o",
         0
     };
 

@@ -1,10 +1,10 @@
 #define _STANDARD_MEM_SZ_
-
 #include "../headers/clibp.h"
 
 heap_t _HEAP_ = NULL;
 static int used_mem = 0;
 int HEAP_DEBUG = 0;
+int HEAP_META_SZ = sizeof(__meta__);
 
 void init_mem() {
 	__syscall(_SYS_MMAP, 0, _HEAP_PAGE_SZ_, 0x01 | 0x02, 0x02 | 0x20, -1, 0);
@@ -59,7 +59,7 @@ any allocate(int sz, int len) {
 		return NULL;
 	}
 
-	int mem = (!sz ? len : sz * len) + 4;
+	int mem = (!sz ? len : sz * len) + HEAP_META_SZ;
 	if(space_left < mem)
 		return NULL;
 
@@ -70,26 +70,34 @@ any allocate(int sz, int len) {
 		return NULL;
 	}
 	any ptr = _HEAP_ + spot;
-	((char *)ptr)[0] = sz;
-	((char *)ptr)[1] = len;
-	((char *)ptr)[2] = 0;
+
+	__meta__ c = {
+		.size = sz,
+		.length = len,
+		.id = 0x7C
+	};
+
+	mem_cpy(ptr, &c, HEAP_META_SZ);
 
 	used_mem += mem;
-	mem_set((any)ptr + 4, '-', mem - 4);
-	((char *)ptr + 4)[0] = '\0';
-	return (any)(ptr + 4);
+	return (any)(((char *)ptr) + HEAP_META_SZ);
+}
+
+__meta__ *__get_meta__(any ptr)
+{
+	return ((__meta__ *)((char *)ptr - HEAP_META_SZ));
 }
 
 int __get_size__(any ptr)
 {
-	return !((char *)ptr - 4)[0] ? ((char *)ptr - 4)[1] : ((char *)ptr - 4)[0] * ((char *)ptr - 4)[1];
+	__meta__ *info = __get_meta__(ptr);
+	return !info->size ? info->length : info->size * info->length;
 }
 
 void pfree(any ptr) {
-	any original = (char *)ptr - 4;
-	int sz = ((char *)ptr - 4)[0];
-	int len = ((char *)ptr - 4)[1];
-	print("Chunk Size: "), _printi(len);
-	mem_set(original, 0, (!sz ? len : sz * len) + 4);
-	used_mem -= (!sz ? len : sz * len) + 4;
+	any original = (char *)ptr - HEAP_META_SZ;
+	int sz = ((char *)ptr - HEAP_META_SZ)[0];
+	int len = ((char *)ptr - HEAP_META_SZ)[1];
+	mem_set(original, 0, (!sz ? len : sz * len) + 5);
+	used_mem -= (!sz ? len : sz * len) + 5;
 }
