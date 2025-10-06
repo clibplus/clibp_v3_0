@@ -152,7 +152,7 @@ void _start() {
 
 		print(COPY), print("....!\n");
 
-        char *n[7] = {"/usr/bin/gcc", "-c", SRC_CODE_FILE, "-o", COPY, "-nostdlib", 0};
+        char *n[8] = {"/usr/bin/gcc", "-ffreestanding", "-c", SRC_CODE_FILE, "-o", COPY, "-nostdlib", 0};
         execute(n[0], n);
 
         if(OPT[1] == 'c') {

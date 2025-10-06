@@ -10,6 +10,7 @@ void init_mem() {
 	__syscall(_SYS_MMAP, 0, _HEAP_PAGE_SZ_, 0x01 | 0x02, 0x02 | 0x20, -1, 0);
 	register long ret asm("rax");
 	_HEAP_ = (heap_t)ret;
+	mem_set(_HEAP_, 0, _HEAP_PAGE_SZ_);
 	if(_HEAP_ < 0)
 	{
 		print("[ - ] Error, Unable to initialize heap....!\n");

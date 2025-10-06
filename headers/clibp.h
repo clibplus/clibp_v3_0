@@ -43,7 +43,8 @@ typedef unsigned int	u32;
 typedef void 			none;
 typedef void 			*any;
 typedef char 			*str;
-typedef void 			*fn_t;
+typedef void 			fn_t;
+typedef void 			*handler_t;
 
 typedef unsigned long 	size_t;
 typedef unsigned long 	len_t;
@@ -81,9 +82,17 @@ int 	get_input(str dest, len_t count);
 	#define STR_H
 	#define ARR_H
 	#define FILE_H
+	#define SOCKET__H
 #endif
 
 #if defined(STR_H)
+	#define __sprintf(dest, format, ...) \
+		_sprintf(dest, format, (void *[]){__VA_ARGS__, 0});
+#endif
+
+#if defined(STR_H)
+	fn_t 	_sprintf(str buffer, str format, any *args);
+	fn_t 	istr(char *dest, int num);
 	len_t 	str_len(str buffer);
 	int   	stra(str src, const str sub);
 	bool	str_cmp(const str src, const str needle);
@@ -172,4 +181,40 @@ int 	get_input(str dest, len_t count);
 				close file
 	*/
 	void	file_close(fd_t fd);
+#endif
+
+#if defined(SOCKET__H)
+	typedef struct {
+	    u16                 sun_family;
+	    char                sun_path[108];
+	} sockaddr_un;
+
+	typedef struct {
+	    unsigned short int  sin_family;
+	    unsigned short int  sin_port;
+	    unsigned int        sin_addr;
+	    unsigned char       sin_zero[8];
+	} sockaddr_in;
+
+	typedef struct {
+	    unsigned short int  sin6_family;
+	    unsigned short int  sin6_port;
+	    unsigned int        sin6_flowinfo;
+	    unsigned char       sin6_addr[16];
+	    unsigned int        sin6_scope_id;
+	} sockaddr_in6;
+
+	typedef struct {
+	    int             fd;
+	    sockaddr_in     addr;
+
+	    int             buff_len;
+	} _sock_t;
+
+	typedef _sock_t *sock_t;
+	_sock_t listen_tcp(const str ip, int port, int concurrent);
+    int parse_ipv4(const char *ip, unsigned int *out);
+    char *convert_ip(unsigned int ip);
+    unsigned short _htons(unsigned short x);
+    unsigned int _htonl(unsigned int x);
 #endif

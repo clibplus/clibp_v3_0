@@ -1,7 +1,63 @@
-#define STR_H
 #include "../../headers/clibp.h"
 
-len_t str_len(str buffer)
+fn_t _sprintf(str buffer, str format, any *args)
+{
+    int arg = 0, idx = 0;
+    for(int i = 0; format[i] != '\0'; i++)
+    {
+        if(format[i] == '%' && format[i + 1] == 's')
+        {
+            for(int c = 0; ((char **)args)[arg][c] != '\0'; c++) {
+                buffer[idx++] = ((char **)args)[arg][c];
+            }
+            arg++;
+            i++;
+            continue;
+        } else if(format[i] == '%' && format[i + 1] == 'd') {
+            istr(buffer + idx, *(int *)args[arg]);
+
+            arg++;
+            i++;
+            continue;
+        }
+
+        buffer[idx++] = format[i];
+    }
+}
+
+fn_t istr(str dest, int num)
+{
+	int temp = num, c = 0;
+	char BUFF[500] = {0};
+    while(temp)
+    {
+    	BUFF[c++] = '0' + (temp % 10);
+		temp /= 10;
+	}
+
+    for(int i = 0; i < c; i++)
+    {
+    	char t = BUFF[i], n = BUFF[--c];
+        BUFF[i] = n;
+        BUFF[c] = t;
+    }
+
+    for(int i = 0; BUFF[i] != '\0'; i++) {
+    	dest[i] = BUFF[i];
+    }
+}
+
+str str_dup(const str buff)
+{
+	int len = str_len(buff);
+
+	str buffer = allocate(0, len);
+	mem_cpy(buffer, buff, len);
+
+	return buffer;
+}
+
+len_t str_len(const str buffer)
 {
 	if(!buffer)
 		return 0;
@@ -48,7 +104,7 @@ int stra(str buff, const str sub) {
 	return 1;
 }
 
-// Find Char (to find multiple, increament match each call until -1)
+// Find Char (to find multiple, increament match each call until -1 or set to 0 to just find 1)
 pos_t find_char(const str buff, const char ch, int match)
 {
 	if(!buff || ch == 0)

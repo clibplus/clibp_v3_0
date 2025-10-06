@@ -22,8 +22,7 @@ void __syscall(long syscall, long arg1, long arg2, long arg3, long arg4, long ar
 int get_pid() {
     __syscall(39, -1, -1, -1, -1, -1, -1);
     volatile register long sys asm("rax");
-    
-    
+
     return sys;
 }
 

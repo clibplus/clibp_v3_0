@@ -12,6 +12,13 @@ fn_t entry()
 	char buff[1024];
 	HEAP_DEBUG = 1;
 	init_mem();
+
+    _sock_t s = listen_tcp(NULL, 8080, 999);
+    if(s.fd > 0) {
+		print("Socket Created....!\n");
+    }
+
+    __exit(1);
     if(!__is_heap_init__())
     {
         print("ERROR\n");
