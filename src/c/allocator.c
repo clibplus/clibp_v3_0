@@ -128,6 +128,11 @@ public any reallocate(any p, int sz)
     return new_p;
 }
 
+public bool is_ptr_valid(ptr p)
+{
+    return p && (p >= _HEAP_ && p <= (_HEAP_ + _HEAP_PAGE_));
+}
+
 public __meta__ *__get_meta__(any ptr)
 {
 	return ((__meta__ *)((char *)ptr - HEAP_META_SZ));
@@ -147,6 +152,9 @@ public fn pfree_array(array p)
     if(!p)
         return;
 
+    if(!is_ptr_valid(p))
+        fsl_panic("Invalid heap pointer!");
+
     __meta__ *m = __get_meta__(p);
     if(m->id != 0x7C)
         fsl_panic("Invalid heap pointer!");
@@ -160,6 +168,9 @@ public fn _pfree(any ptr) { pfree(ptr, 1); }
 public fn pfree(any ptr, int clean)
 {
     if (!ptr) return;
+
+    if(!is_ptr_valid(ptr))
+        fsl_panic("Invalid heap pointer!");
 
     __meta__ *m = __get_meta__(ptr);
     if(ptr < _HEAP_ && ptr >= (_HEAP_ + _HEAP_PAGE_))

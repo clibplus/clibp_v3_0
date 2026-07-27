@@ -47,6 +47,22 @@ public i32 find_char_at(const string buffer, const char ch, i32 match)
 	return -1;
 }
 
+
+public i32 __find_char(const string buffer, const char ch, int sz)
+{
+	if(!buffer)
+		return -1;
+
+	int count = 0;
+	for(int i = 0; i < sz; i++)
+	{
+		if(buffer[i] == ch)
+			count++;
+	}
+
+	return count;
+}
+
 public i32 find_last_char_at(const string buffer, const char ch)
 {
     if(buffer || ch)

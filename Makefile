@@ -49,6 +49,7 @@ count:
 	wc -l \
 	tests/*.c \
 	src/c/*.c \
+	src/c/os/*.c \
 	src/c/stdlib/*.c \
 	headers/*.h \
 	src/asm/*.asm

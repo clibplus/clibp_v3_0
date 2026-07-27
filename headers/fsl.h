@@ -397,6 +397,7 @@ int 	get_args(char* argv[]);
 	public fn 			_pfree(any ptr);
 	public fn        	pfree(any ptr, int clean);
 	public __meta__* 	__get_meta__(any ptr);
+	public bool 		is_ptr_valid(ptr p);
 
 	#define AUTOF __attribute__((cleanup(_pfree)))
 #endif
@@ -420,6 +421,7 @@ int 	get_args(char* argv[]);
 	public i32 		count_char(const string buffer, const char ch);
 	public i32 		find_char(const string buffer, const char ch);
 	public i32 		find_char_at(const string buffer, const char ch, int match);
+	public i32 		__find_char(const string buffer, const char ch, int sz);
 	public i32 		find_last_char_at(const string buffer, const char ch);
 	public i32 		_find_char_at(const string buffer, const char ch, int match, int *start);
 	public bool 	trim_char(string buff, int ch);
