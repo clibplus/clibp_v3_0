@@ -11,9 +11,9 @@
 
 # Some Info
 
-- The project is still in development!
-- The library is a minimal C backend with a custom loader to link!
-- Currently working on a machine code compiler to bind all FSL into a modernize C-like language in the future!
+Update as of 8-14-26
+
+The project is on slow maintenance for the time being. Join the community @ https://discord.gg/XCKaU3UTDX
 
 ### Supported Architecture
 
