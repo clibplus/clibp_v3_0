@@ -15,6 +15,10 @@ Update as of 8-14-26
 
 The project is on slow maintenance for the time being. Join the community @ https://discord.gg/XCKaU3UTDX
 
+### Supported OS(s)
+
+- Debian / Ubuntu
+
 ### Supported Architecture
 
 - x86
@@ -23,6 +27,18 @@ The project is on slow maintenance for the time being. Join the community @ http
 - RISC-V (Still in development)
 
 Note: The only confirmed working architecture is x86 and x86_64. Mainly on intel CPU!
+
+### Supported Compilers
+
+- GCC
+- TCC
+- CLANG
+
+You can install with different compilers by doing
+
+```bash
+sudo make COMPILER=<compiler>
+```
 
 ### Install
 
@@ -55,18 +71,6 @@ $ null=/dev/null bash test.bat
 # Windows Use: 
 
 $ cmd /c test.bat
-```
-
-### Supported Compilers
-
-- GCC
-- TCC
-- CLANG
-
-You can install with different compilers by doing
-
-```bash
-sudo make COMPILER=<compiler>
 ```
 
 ### File Structure Information
