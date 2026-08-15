@@ -119,7 +119,7 @@ public fn _sprintf(string buffer, string format, any* args)
 			for (int c = 0; num[c] != '\0'; c++)
 				buffer[idx++] = num[c];
 
-			pfree(num, 1);
+			_pfree(num);
 			arg++;
 			i++;
 			continue;

@@ -132,6 +132,12 @@ public ptr to_heap(ptr p, i32 sz)
 	return pointer;
 }
 
+public fn __fsl_warning(string msg, string file, int line)
+{
+	print(file), print(":"), _printi(line), print(" -> ");
+	print("\x1b[34mwarning\x1b[39m: "), println(msg);
+}
+
 public fn __fsl_panic(string msg, string file, int line)
 {
 	if(__FSL_DEBUG__)

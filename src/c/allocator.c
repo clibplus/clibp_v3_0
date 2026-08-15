@@ -7,6 +7,8 @@ heap_t _HEAP_ 			= NULL;
 int used_mem 			= 0;
 int HEAP_DEBUG 			= 0;
 const int HEAP_META_SZ 	= sizeof(__meta__);
+int allocations = 0;
+int freed_allocations = 0;
 
 #if defined(_WIN32) ||  defined(_WIN64)
 char _TEST_HEAP_[8192];
@@ -105,6 +107,7 @@ public any allocate(int sz, int len) {
         int n = sz ? sz * len : len;
 	}
 
+    allocations++;
     return (any)((char *)ptr + HEAP_META_SZ);
 }
 
@@ -153,11 +156,11 @@ public fn pfree_array(array p)
         return;
 
     if(!is_ptr_valid(p))
-        fsl_panic("Invalid heap pointer!");
+        fsl_warning("Invalid heap pointer!");
 
     __meta__ *m = __get_meta__(p);
     if(m->id != 0x7C)
-        fsl_panic("Invalid heap pointer!");
+        fsl_warning("Invalid heap pointer!");
 
 	for(int i = 0; p[i] != NULL; i++)
         if(p[i])
@@ -170,11 +173,11 @@ public fn pfree(any ptr, int clean)
     if (!ptr) return;
 
     if(!is_ptr_valid(ptr))
-        fsl_panic("Invalid heap pointer!");
+        fsl_warning("Invalid heap pointer!");
 
     __meta__ *m = __get_meta__(ptr);
     if(ptr < _HEAP_ && ptr >= (_HEAP_ + _HEAP_PAGE_))
-        fsl_panic("Invalid heap pointer!");
+        fsl_warning("Invalid heap pointer!");
 
     int payload = m->size ? m->size * m->length : m->length;
     int total   = payload + HEAP_META_SZ;
@@ -186,12 +189,13 @@ public fn pfree(any ptr, int clean)
     	print("[ALLOCATOR]: Freeing "), printi(payload), print(" - memory block @ "), println(buff);
     }
 
-    if(total == 0)
-        return;
+    // if(total == 0)
+    //     return;
 
 	if(clean)
     	mem_set(m, 1, total);
 
+    freed_allocations++;
     used_mem -= total;
 }
 
@@ -201,6 +205,8 @@ public fn uninit_mem(void)
 	if(__FSL_DEBUG__) {
 		println("[ALLOCATOR]: Uninitializing");
 
+        int leaks = allocations - freed_allocations;
+        _printf("Leaks: %d\n", (ptr)&leaks);
         if(HEAP_DEBUG) {
             // #ifdef __MEM_LEAK_FINDER__
             ((string)_HEAP_)[_HEAP_PAGE_ - 1] = '\0';

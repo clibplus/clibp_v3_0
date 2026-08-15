@@ -6,7 +6,13 @@ public i32 is_ascii(char c)
 public i32 is_ascii_alpha(char c)
 {
 	unsigned char b = (unsigned char)c;
-	return (b > 'a' && b < 'z' || b > 'A' && b < 'Z');
+	return (b >= 'a' && b <= 'z' || b >= 'A' && b <= 'Z');
+}
+
+public i32 is_ascii_digit(char c)
+{
+	unsigned char b = (unsigned char)c;
+	return (b >= '0' && b <= '9');
 }
 
 public i32 count_char(const string buffer, const char ch)
@@ -128,14 +134,17 @@ public bool trim_char(string buff, int ch)
 		return false;
 
 	int idx = 0;
+	char new_buff[_str_len(buff)];
 	for(int i = 0; buff[i] != '\0'; i++) {
 		if(i == ch)
 			continue;
 
 		char n = buff[i];
-		buff[idx++] = n;
+		new_buff[idx++] = n;
 	}
 
+	new_buff[idx++] = '\0';
+	mem_cpy(buff, new_buff, idx);
 	return true;
 }
 

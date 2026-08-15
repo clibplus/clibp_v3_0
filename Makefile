@@ -22,7 +22,7 @@ SYSTEM_HDR_DIR = /usr/include
 OBJ_PATH = $(BUILD)
 
 # Compilation flags and files
-FLAGS = -c -nostdlib -nostdinc ${DEBUG} ${CFLAGS}
+FLAGS = -c -nostdlib -nostdinc -ffreestanding -static ${DEBUG} ${CFLAGS}
 LDFLAGS = --gc-sections
 FGCC_FLAGS = -c -nostdlib -ffunction-sections -Wl,--gc-sections -fdata-sections ${DEBUG} ${CFLAGS}
 FILES = src/c/*.c src/c/os/*.c src/c/stdlib/*.c

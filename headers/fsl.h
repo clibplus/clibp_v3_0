@@ -162,6 +162,9 @@ int 	get_args(char* argv[]);
 	#define fsl_panic(msg) 	\
 		__fsl_panic(msg, __FILE__, __LINE__);
 
+	#define fsl_warning(msg) \
+		__fsl_warning(msg, __FILE__, __LINE__);
+
 	/*
 		@DOC
 			@return: n/a
@@ -277,6 +280,17 @@ int 	get_args(char* argv[]);
 			@param file 	file that panic
 			@param line		line that panic
 		@return: n/a
+		@note: Display a warning message
+					use marco: fsl_warning() instead
+	*/
+	public fn __fsl_warning(string msg, string file, int line);
+
+	/*
+		@DOC
+			@param msg 		panic message
+			@param file 	file that panic
+			@param line		line that panic
+		@return: n/a
 		@note: Display a panic message and exit with code 1.
 					use marco: fsl_panic() instead
 	*/
@@ -367,6 +381,8 @@ int 	get_args(char* argv[]);
 	extern int					_HEAP_PAGE_;
 	extern int                  _HEAP_SZ_;
 	extern int                  _HEAP_PAGE_SZ_;
+	extern int 					allocations;
+	extern int 					freed_allocations;
 
 	#if defined(_WIN32 ) || defined(_WIN64)
 	typedef struct {
@@ -418,6 +434,7 @@ int 	get_args(char* argv[]);
 #ifdef _FSL_CHAR_H
 	public i32 		is_ascii(const char c);
 	public i32 		is_ascii_alpha(const char c);
+	public i32 		is_ascii_digit(char c);
 	public i32 		count_char(const string buffer, const char ch);
 	public i32 		find_char(const string buffer, const char ch);
 	public i32 		find_char_at(const string buffer, const char ch, int match);
