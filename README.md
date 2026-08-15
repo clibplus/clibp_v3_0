@@ -115,5 +115,5 @@ Check out the TODO list for a set of task from important to least important.
 # Community 
 
 <p>We have a discord server for the public FSL community</p>
-<p>Join here for any questions or help with anything FSL <a href="https://discord.gg/3w85CEhN6w">Click Here to Join</a></p>
+<p>Join here for any questions or help with anything FSL <a href="https://discord.gg/XCKaU3UTDX">Click Here to Join</a></p>
 
