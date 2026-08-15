@@ -13,6 +13,8 @@
 
 Update as of 8-14-26
 
+The navigation bar above is currently not working!
+
 The project is on slow maintenance for the time being. Join the community @ https://discord.gg/XCKaU3UTDX
 
 ### Supported OS(s)
