@@ -435,15 +435,6 @@ int 	get_args(char* argv[]);
 	public i32 		is_ascii(const char c);
 	public i32 		is_ascii_alpha(const char c);
 	public i32 		is_ascii_digit(char c);
-	public i32 		count_char(const string buffer, const char ch);
-	public i32 		find_char(const string buffer, const char ch);
-	public i32 		find_char_at(const string buffer, const char ch, int match);
-	public i32 		__find_char(const string buffer, const char ch, int sz);
-	public i32 		find_last_char_at(const string buffer, const char ch);
-	public i32 		_find_char_at(const string buffer, const char ch, int match, int *start);
-	public bool 	trim_char(string buff, int ch);
-	public bool		trim_char_idx(string buff, int pos);
-	public int 		replace_char(string buffer, const char find, const char replace);
 #endif
 
 /*
@@ -489,6 +480,15 @@ int 	get_args(char* argv[]);
 	public bool 	str_join(string buffer, array arr, const char delim);
 	public bool 	is_str_lowercase(string buffer);
 	public bool 	is_str_uppercase(string buffer);
+	public i32 		count_char(const string buffer, const char ch);
+	public i32 		find_char(const string buffer, const char ch);
+	public i32 		find_char_at(const string buffer, const char ch, int match);
+	public i32 		__find_char(const string buffer, const char ch, int sz);
+	public i32 		find_last_char_at(const string buffer, const char ch);
+	public i32 		_find_char_at(const string buffer, const char ch, int match, int *start);
+	public bool 	trim_char(string buff, int ch);
+	public bool		trim_char_idx(string buff, int pos);
+	public int 		replace_char(string buffer, const char find, const char replace);
 	public bool 	str_strip(string buffer);
 	public string 	float_to_str(double n, char *out, int precision);
 	public bool 	str_remove_substr_idx(string buffer, int start, int end);

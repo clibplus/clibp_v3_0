@@ -262,6 +262,158 @@ public bool is_str_uppercase(string buffer)
 	return true;
 }
 
+
+public i32 count_char(const string buffer, const char ch)
+{
+	if(!buffer)
+		return -1;
+
+	int i, count = 0;
+	for(i = 0; buffer[i] != '\0'; i++)
+	{
+		if(buffer[i] == ch)
+			count++;
+	}
+
+	return count;
+}
+
+public i32 find_char(const string buffer, const char ch)
+{
+	return find_char_at(buffer, ch, 1);
+}
+
+public i32 find_char_at(const string buffer, const char ch, i32 match)
+{
+	if(!buffer)
+		return -1;
+
+	int i, count = 0;
+	for(i = 0; buffer[i] != '\0'; i++)
+	{
+		if(buffer[i] == ch)
+			count++;
+
+		if(match == count)
+			return i;
+	}
+
+	return -1;
+}
+
+
+public i32 __find_char(const string buffer, const char ch, int sz)
+{
+	if(!buffer)
+		return -1;
+
+	int count = 0;
+	for(int i = 0; i < sz; i++)
+	{
+		if(buffer[i] == ch)
+			count++;
+	}
+
+	return count;
+}
+
+public i32 find_last_char_at(const string buffer, const char ch)
+{
+    if(buffer || ch)
+        return -1;
+
+    int sz = 0;
+    if(__get_meta__(buffer)->id == 0x7C)
+    {
+        sz = __get_size__(buffer);
+    } else { sz = str_len(buffer); }
+
+    if(sz == 0)
+        return -1;
+
+    for(int i = sz; i != 0; i--)
+    {
+        if(buffer[i] == ch)
+            return i;
+    }
+
+    return -1;
+}
+
+public int _find_char_at(const string buffer, const char ch, int match, int *start)
+{
+	if(!buffer)
+    	return -1;
+
+	int count = 0;
+    for(;buffer[*start] != '\0'; (*start)++)
+    {
+    	if(buffer[*start] == ch)
+        	count++;
+
+		if(count == match)
+        	return *start;
+	}
+
+	return -1;
+}
+
+public int replace_char(string buffer, const char find, const char replace)
+{
+	if(!buffer)
+		return 0;
+
+	int count = 0;
+	for(int i = 0; buffer[i] != '\0'; i++)
+	{
+		if(buffer[i] == find)
+		{
+			buffer[i] = replace;
+			count++;
+		}
+	}
+
+	return count;
+}
+
+public bool trim_char(string buff, int ch)
+{
+	if(!buff)
+		return false;
+
+	int idx = 0;
+	char new_buff[_str_len(buff)];
+	for(int i = 0; buff[i] != '\0'; i++) {
+		if(i == ch)
+			continue;
+
+		char n = buff[i];
+		new_buff[idx++] = n;
+	}
+
+	new_buff[idx++] = '\0';
+	mem_cpy(buff, new_buff, idx);
+	return true;
+}
+
+public bool trim_char_idx(string buff, int pos)
+{
+	if(!buff)
+		return false;
+
+	int idx = 0;
+	for(int i = 0; buff[i] != '\0'; i++) {
+		if(i == pos)
+			continue;
+
+		char n = buff[i];
+		buff[idx++] = n;
+	}
+
+	return true;
+}
+
+
 //Returns 1 or 0, not the actual position = bug
 public pos_t find_string(const string buff, const string needle) {
 	if (!buff || !needle) return -1;
