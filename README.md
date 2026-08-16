@@ -23,9 +23,8 @@ Update as of 8-14-26
 
 ### Supported Architecture
 
-- x86
-- x86_64
-- AMD (Untested)
+- x86 Intel / AMD(Untested)
+- x86_64 Intel / AMD(Untested)
 - RISC-V (Still in development)
 
 Note: The only confirmed working architecture is x86 and x86_64. Mainly on intel CPU!
