@@ -2,6 +2,8 @@
 
 typedef i8 *string_t;
 
+#define __STRING_METADATA_SZ__ 8
+
 i64 get_string_size(string_t buffer)
 { return *(i64 *)(buffer - sizeof(i64) - 1); }
 
@@ -31,7 +33,7 @@ public bool string_append(string_t *buffer, string sub)
 	if(!buffer || !sub)
 		return false;
 	
-	string_t original_p = *buffer - sizeof(i64) - 1;
+	string_t original_p = get_original_string_pointer(*buffer);
 	i64 len = *(i64 *)original_p;
 	i64 slen = str_len(sub);
 
@@ -50,7 +52,7 @@ public bool string_replace(string_t *buffer, string find, string replacement)
 	if(!buffer || !find)
 		return false;
 
-	string_t original_p = *buffer - sizeof(i64) - 1;
+	string_t original_p = get_original_string_pointer(*buffer);
 	i64 len = *(i64 *)original_p;
 	i64 slen = str_len(find);
 	i64 vlen = str_len(replacement);
