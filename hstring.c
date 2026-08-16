@@ -2,30 +2,30 @@
 
 typedef i8 *string_t;
 
-#define __STRING_METADATA_SZ__ 8
+#define __STRING_METADATA_SZ__ sizeof(i64)
 
 i64 get_string_size(string_t buffer)
-{ return *(i64 *)(buffer - sizeof(i64) - 1); }
+{ return *(i64 *)(buffer - __STRING_METADATA_SZ__ - 1); }
 
 i64 get_original_string_pointer(string_t buffer)
-{ return *(i64 *)(buffer - sizeof(i64) - 1); }
+{ return *(i64 *)(buffer - __STRING_METADATA_SZ__ - 1); }
 
 string_t init_string(int len)
 {
-	string_t p = allocate(0, sizeof(i64) + len + 2);
+	string_t p = allocate(0, __STRING_METADATA_SZ__ + len + 2);
 	*((i64 *)p) = len;
 
-	return p + sizeof(i64) + 1;
+	return p + __STRING_METADATA_SZ__ + 1;
 }
 
 string_t create_string(string q)
 {
 	i64 len = _str_len(q);
-	string_t p = (i8 *)allocate(0, sizeof(i64) + len + 2);
+	string_t p = (i8 *)allocate(0, __STRING_METADATA_SZ__ + len + 2);
 	*((i64 *)p) = len;
 
-	mem_cpy(p + sizeof(i64) + 1, q, len);
-	return p + sizeof(i64) + 1;
+	mem_cpy(p + __STRING_METADATA_SZ__ + 1, q, len);
+	return p + __STRING_METADATA_SZ__ + 1;
 }
 
 public bool string_append(string_t *buffer, string sub)
@@ -38,10 +38,10 @@ public bool string_append(string_t *buffer, string sub)
 	i64 slen = str_len(sub);
 
 	i64 new_len = len + slen;
-	string_t new_p = to_heap(original_p, new_len + sizeof(i64) + 1);
+	string_t new_p = to_heap(original_p, new_len + __STRING_METADATA_SZ__ + 1);
 	*((i64 *)new_p) = new_len;
 
-	*buffer = new_p + sizeof(i64) + 1;
+	*buffer = new_p + __STRING_METADATA_SZ__ + 1;
 
 	mem_cpy((*buffer) + len, sub, slen);
 	return true;
