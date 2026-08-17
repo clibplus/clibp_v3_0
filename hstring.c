@@ -64,9 +64,8 @@ public bool string_replace(string_t *buffer, string find, string replacement)
 		{
 			if(mem_cmp((*buffer) + i, find, slen))
 			{
-				for(int c = 0; c < vlen; c++)
-					(*buffer)[idx++] = replacement[c];
-
+				mem_cpy((*buffer) + i, replacement, vlen);
+				idx += vlen;
 				i += vlen - 1;
 				continue;
 			}
@@ -77,41 +76,30 @@ public bool string_replace(string_t *buffer, string find, string replacement)
 		return true;
 	} else {
 		int new_len = len + vlen - (vlen - slen);
-		string_t new_buff = to_heap(original_p, new_len + sizeof(i64) + 1);
-		*((i64 *)new_buff) = new_len;
+		string_t new_p = to_heap(original_p, new_len + sizeof(i64) + 1);
+		*((i64 *)new_p) = new_len;
 
-		for(int i = len, idx = 0; i < len; i++)
+		string_t new_buff = new_p + __STRING_METADATA_SZ__ + 1;
+		for(int i = 0, idx = 0; i < len; i++)
 		{
 			if(mem_cmp((*buffer) + i, find, slen))
 			{
-				for(int c = 0; c < vlen; c++)
-					new_buff[idx++] = replacement[c];
-
+				mem_cpy(new_buff + idx, replacement, vlen);
+				idx += vlen;
 				i += vlen;
 				continue;
 			}
 
 			new_buff[idx++] = (*buffer)[i];
-			new_buff[idx] = '\0';
+//			new_buff[idx] = '\0';
 		}
 
 		_pfree(original_p);
-		*buffer = new_buff + __STRING_METADATA_SZ__ + 1;
+		*buffer = new_buff;
 		return true;
 	}
 
 	return false;
-}
-
-void *loop(void *src, void *dest, int sz)
-{
-	register char *rsi asm("rsi") = src;
-	register char *rdi asm("rdi") = dest;
-	register long rcx asm("rcx") = sz;
-	asm("1:\n\t");
-	asm("lodsb\n\t");
-    asm("stosb\n\t");
-    asm("loop 1b\n\t");
 }
 
 public bool is_string_lowercase(string_t buffer)
@@ -157,7 +145,7 @@ int entry()
 		fsl_warning("failed to append to string");
 	
 	println(n);
-	string_replace(&n, "fag", "nig");
+	string_replace(&n, "fag", "nig lul");
 
 	int sz = get_string_size(n);
 	int len = _str_len(n);

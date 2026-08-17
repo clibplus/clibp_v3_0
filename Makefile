@@ -103,12 +103,12 @@ clean:
 # Test all test files in 'tests/'
 #
 test_run:
-	fsl tests/heap.c -o heap && ./heap
-	fsl tests/file.c -o file && ./file
-# 	fsl tests/thread.c -o thread && ./thread
-	fsl tests/map.c -o map && ./map
-	fsl tests/array.c -o array && ./array
-	fsl tests/c_stdlib_fsl_support.c -o cstdlib_fsl && ./cstdlib_fsl
-	gcc tests/c_stdlib_fsl_support.c -o cstdlib_fsl -lfsl && ./cstdlib_fsl
-	fsl tests/change_heap.c -o change_heap && ./change_heap
+	fsl tests/linux/heap.c -o heap && ./heap
+	fsl tests/linux/file.c -o file && ./file
+# 	fsl tests/linux/thread.c -o thread && ./thread
+	fsl tests/linux/map.c -o map && ./map
+# 	fsl tests/linux/array.c -o array && ./array
+	fsl tests/linux/c_stdlib_fsl_support.c -o cstdlib_fsl && ./cstdlib_fsl
+	gcc tests/linux/c_stdlib_fsl_support.c -o cstdlib_fsl -lfsl && ./cstdlib_fsl
+	fsl tests/linux/change_heap.c -o change_heap && ./change_heap
 	rm -rf heap file thread map array cstdlib_fsl change_heap
