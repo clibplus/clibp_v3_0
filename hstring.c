@@ -76,11 +76,12 @@ public bool string_replace(string_t *buffer, string find, string replacement)
 		return true;
 	} else {
 		int new_len = len + vlen - (vlen - slen);
-		string_t new_p = to_heap(original_p, new_len + sizeof(i64) + 1);
+		string_t new_p = to_heap(original_p, new_len + sizeof(i64) + 2);
 		*((i64 *)new_p) = new_len;
 
 		string_t new_buff = new_p + __STRING_METADATA_SZ__ + 1;
-		for(int i = 0, idx = 0; i < len; i++)
+		int idx = 0;
+		for(int i = 0; i < len; i++)
 		{
 			if(mem_cmp((*buffer) + i, find, slen))
 			{
@@ -94,6 +95,7 @@ public bool string_replace(string_t *buffer, string find, string replacement)
 //			new_buff[idx] = '\0';
 		}
 
+		new_buff[idx] = '\0';
 		_pfree(original_p);
 		*buffer = new_buff;
 		return true;
