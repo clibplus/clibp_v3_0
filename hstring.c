@@ -1,16 +1,15 @@
 #include <fsl.h>
 
 typedef i8 *string_t;
-
 #define __STRING_METADATA_SZ__ sizeof(i64)
 
-i64 get_string_size(string_t buffer)
+public i64 get_string_size(string_t buffer)
 { return *(i64 *)(buffer - __STRING_METADATA_SZ__ - 1); }
 
-string_t get_original_string_pointer(string_t buffer)
+public string_t get_original_string_pointer(string_t buffer)
 { return (buffer - __STRING_METADATA_SZ__ - 1); }
 
-string_t init_string(int len)
+public string_t init_string(int len)
 {
 	string_t p = allocate(0, __STRING_METADATA_SZ__ + len + 2);
 	*((i64 *)p) = len;
@@ -18,7 +17,18 @@ string_t init_string(int len)
 	return p + __STRING_METADATA_SZ__ + 1;
 }
 
-string_t create_string(string q)
+public bool increase_buffer(string_t *buffer, i64 more)
+{
+	if(!buffer || !more)
+		return false;
+
+	i64 len = get_string_size(*buffer);
+	string_t p = to_heap(get_original_string_pointer(*buffer), len + more);
+
+	return true;
+}
+
+public string_t create_string(string q)
 {
 	i64 len = _str_len(q);
 	string_t p = (i8 *)allocate(0, __STRING_METADATA_SZ__ + len + 2);
@@ -32,7 +42,7 @@ public bool string_append(string_t *buffer, string sub)
 {
 	if(!buffer || !sub)
 		return false;
-	
+
 	string_t original_p = get_original_string_pointer(*buffer);
 	i64 len = *(i64 *)original_p;
 	i64 slen = str_len(sub);
@@ -72,7 +82,7 @@ public bool string_replace(string_t *buffer, string find, string replacement)
 
 			(*buffer)[idx++] = (*buffer)[i];
 		}
-		
+
 		return true;
 	} else {
 		int new_len = len + vlen - (vlen - slen);
@@ -92,7 +102,6 @@ public bool string_replace(string_t *buffer, string find, string replacement)
 			}
 
 			new_buff[idx++] = (*buffer)[i];
-//			new_buff[idx] = '\0';
 		}
 
 		new_buff[idx] = '\0';
@@ -136,16 +145,15 @@ int entry()
 {
 	int old_size = used_mem;
 	toggle_debug_mode();
-	printi(sizeof(__meta__));
 	string_t n = create_string("testing");
 	println(n);
 
-	string v = allocate(0, 7);
+	string v = init_string(7);
 	mem_cpy(v, " this", 5);
 
 	if(!string_append(&n, v) || !string_append(&n, " string"))
 		fsl_warning("failed to append to string");
-	
+
 	println(n);
 	string_replace(&n, "string", "char ptr");
 
@@ -173,5 +181,6 @@ int entry()
 	int chk = is_string_lowercase(t + 9);
 	if(chk)
 		println("Lowercase");
+
 	return 0;
 }
