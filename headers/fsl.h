@@ -433,6 +433,8 @@ int 	get_args(char* argv[]);
 */
 #ifdef _FSL_CHAR_H
 	public i32 		is_ascii(const char c);
+	public i32 		is_lowercase(char c);
+	public i32 		is_uppercase(char c);
 	public i32 		is_ascii_alpha(const char c);
 	public i32 		is_ascii_digit(char c);
 #endif

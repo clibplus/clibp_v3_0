@@ -114,6 +114,34 @@ void *loop(void *src, void *dest, int sz)
     asm("loop 1b\n\t");
 }
 
+public bool is_string_lowercase(string_t buffer)
+{
+	if(!buffer)
+		return false;
+
+	for(int i = 0; buffer[i] != '\0'; i++)
+	{
+		if(!is_lowercase(buffer[i]))
+			return false;
+	}
+
+	return true;
+}
+
+public bool is_string_uppercase(string_t buffer)
+{
+	if(!buffer)
+		return false;
+
+	for(int i = 0; buffer[i] != '\0'; i++)
+	{
+		if(!is_uppercase(buffer[i]))
+			return false;
+	}
+
+	return true;
+}
+
 int entry()
 {
 	int old_size = used_mem;
@@ -151,5 +179,9 @@ int entry()
     asm("loop 1b\n\t");
 
 	println(t);
+
+	int chk = is_string_lowercase(t + 9);
+	if(chk)
+		println("Lowercase");
 	return 0;
 }
