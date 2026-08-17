@@ -135,17 +135,17 @@ int entry()
 	int old_size = used_mem;
 	toggle_debug_mode();
 	printi(sizeof(__meta__));
-	string_t n = create_string("Skid");
+	string_t n = create_string("testing");
 	println(n);
 
 	string v = allocate(0, 7);
-	mem_cpy(v, " dick", 5);
+	mem_cpy(v, " this", 5);
 
-	if(!string_append(&n, " fag") || !string_append(&n, v))
+	if(!string_append(&n, v) || !string_append(&n, " string"))
 		fsl_warning("failed to append to string");
 	
 	println(n);
-	string_replace(&n, "fag", "nig lul");
+	string_replace(&n, "string", "char ptr");
 
 	int sz = get_string_size(n);
 	int len = _str_len(n);
