@@ -116,8 +116,20 @@ typedef i32					pos_t;
 /* Global Function Declaraction */
 long _syscall(long n, long a1, long a2, long a3, long a4, long a5, long a6);
 fn __syscall(long syscall, long arg1, long arg2, long arg3, long arg4, long arg5, long arg6);
+
+/*
+    @DOC
+        @params System-V ABI
+
+        @returns long
+
+	@Note:
+		Universal Syscall Function
+*/
 long __syscall__(long arg1, long arg2, long arg3, long arg4, long arg5, long arg6, long sys);
 long ___syscall__(long arg1, long arg2, long arg3, long arg4, long arg5, long arg6, long sys);
+
+/* Some Compiler(s) Requirements */
 static u64 udiv64(u64 a, u64 b);
 i64 __divdi3(i64 a, i64 b);
 long long __moddi3(long long a, long long b);
