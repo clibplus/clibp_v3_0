@@ -6,7 +6,7 @@ if "%OS%"=="Windows_NT" call :myFunction
 goto :eof
 
 :myFunction
-@echo "ALGO THE GOD HERE | FSL ON TOP"
+@echo "FSL-Libc"
 del $null
 del null
 exit /b
