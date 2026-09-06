@@ -25,7 +25,8 @@ OBJ_PATH = $(BUILD)
 FLAGS = -c -nostdlib -nostdinc -ffreestanding -static ${DEBUG} ${CFLAGS}
 LDFLAGS = --gc-sections
 FGCC_FLAGS = -c -nostdlib -ffunction-sections -Wl,--gc-sections -fdata-sections ${DEBUG} ${CFLAGS}
-FILES = src/c/*.c src/c/os/*.c src/c/stdlib/*.c
+# FILES = src/c/*.c src/c/os/*.c src/c/stdlib/*.c
+FILES = $(shell find src/c src/c/os src/c/stdlib -name '*.c' ! -iname '*win*')
 
 # Variables Used For Arguments
 # CFLAGS
@@ -98,6 +99,7 @@ move:
 clean:
 	rm -rf *.o
 	rm $(FGCC)
+	rm null
 
 #
 # Test all test files in 'tests/'

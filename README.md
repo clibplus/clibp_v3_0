@@ -68,11 +68,12 @@ Language: Polyglot - Bash / Batch
 ```
 # Linux Use: 
 
-$ null=/dev/null bash test.bat
+[BASH] $ bash ./setup.bat
 
 # Windows Use: 
 
-$ cmd /c test.bat
+[SHELL] $ .\setup.bat
+[POWERSHELL] $ cmd /c .\setup.bat
 ```
 
 ### File Structure Information
