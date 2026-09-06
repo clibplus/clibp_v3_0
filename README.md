@@ -17,6 +17,8 @@ Update as of 9-5-26
 
 - The project is on slow maintenance for the time being. Join the community @ https://discord.gg/XCKaU3UTDX
 
+- This project is specifically for/used-on linux, Support for windows has started with limited features and continue to be worked on.
+
 ### Supported OS(s)
 
 - Debian / Ubuntu
@@ -35,7 +37,7 @@ Note: The only confirmed working architecture is x86 and x86_64. Mainly on intel
 - GCC
 - TCC
 - CLANG
-- MSVC (cl)
+- MSVC ``(cl)``
 
 You can install with different compilers by doing
 
