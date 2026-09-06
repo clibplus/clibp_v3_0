@@ -20,6 +20,7 @@ Update as of 9-5-26
 ### Supported OS(s)
 
 - Debian / Ubuntu
+- Windows [NEW / Limited-FSL]
 
 ### Supported Architecture
 
@@ -34,6 +35,7 @@ Note: The only confirmed working architecture is x86 and x86_64. Mainly on intel
 - GCC
 - TCC
 - CLANG
+- MSVC (cl)
 
 You can install with different compilers by doing
 
