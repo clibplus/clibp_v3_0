@@ -7,6 +7,8 @@ goto :eof
 
 :setup_fsl
 
+@REM Windows Sucks
+
 @echo [31mSetting up FSL for Windows[0m
 del $null
 del null
