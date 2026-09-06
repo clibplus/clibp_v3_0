@@ -72,7 +72,7 @@ Language: Polyglot - Bash / Batch
 
 # Windows Use: 
 
-[SHELL] $ .\setup.bat
+[CMD] $ .\setup.bat
 [POWERSHELL] $ cmd /c .\setup.bat
 ```
 
