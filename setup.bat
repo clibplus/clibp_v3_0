@@ -16,16 +16,15 @@ del null
 cl >nul 2>&1
 if errorlevel 0 (
     echo [32mMSVC Already Installed and Setup![0m
-    exit /b 1
+    goto build
 )
 
 for /f "delims=" %%A in ('where /r C:\ VsDevCmd.bat 2^>nul') do set "test=%%A"
 
 if not defined test (
     echo MSVC Dev Setup Not Found!!
-    exit /b 1
+    goto build
 )
-
 
 echo [32mSetting up MSVC Variables![0m
 
@@ -37,5 +36,8 @@ call "%test%" -arch=x64
 @REM     echo MSVC Compiler Not Found!
 @REM     exit /b 1
 @REM )
+
+:build
+cl /I"headers" /LD src/c/internal_win.c src/c/allocator.c src/c/memory.c src/c/stdlib/char.c src/c/stdlib/int.c /Fe:build/fsl.dll
 
 exit /b

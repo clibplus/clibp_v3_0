@@ -43,10 +43,7 @@ public fn init_mem(void) {
         ret = __sys_mmap(0, _HEAP_PAGE_, 0x1|0x2, 0x2|0x20, -1, 0);
         if (ret <= 0)
             fsl_panic("mmap failed!");
-    #endif
-
-
-    #if defined(_WIN32) || defined(_WIN64)
+    #elif defined(_WIN32) || defined(_WIN64)
         _HEAP_ = (heap_t)_TEST_HEAP_;
     #else
         _HEAP_ = (heap_t)ret;
@@ -95,7 +92,7 @@ public any allocate(int sz, int len) {
     c.id = 0x7C;
 
     mem_cpy(ptr, &c, HEAP_META_SZ);
-    mem_set(ptr + HEAP_META_SZ, 0, mem_needed - HEAP_META_SZ);
+    mem_set((char *)ptr + HEAP_META_SZ, 0, mem_needed - HEAP_META_SZ);
 
     used_mem += mem_needed;
 
@@ -133,7 +130,7 @@ public any reallocate(any p, int sz)
 
 public bool is_ptr_valid(ptr p)
 {
-    return p && (p >= _HEAP_ && p <= (_HEAP_ + _HEAP_PAGE_));
+    return p && (p >= _HEAP_ && p <= ((char *)_HEAP_ + _HEAP_PAGE_));
 }
 
 public __meta__ *__get_meta__(any ptr)
@@ -176,7 +173,7 @@ public fn pfree(any ptr, int clean)
         fsl_warning("Invalid heap pointer!");
 
     __meta__ *m = __get_meta__(ptr);
-    if(ptr < _HEAP_ && ptr >= (_HEAP_ + _HEAP_PAGE_))
+    if(ptr < _HEAP_ && ptr >= ((char *)_HEAP_ + _HEAP_PAGE_))
         fsl_warning("Invalid heap pointer!");
 
     int payload = m->size ? m->size * m->length : m->length;

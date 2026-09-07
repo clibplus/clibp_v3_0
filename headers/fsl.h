@@ -113,6 +113,10 @@ typedef i32					pos_t;
 	typedef unsigned long int		uintptr_t;
 #endif
 
+#if defined(_WIN32) || defined(_WIN64)
+public fn ptr_to_str(ptr p, string out);
+#endif
+
 /* Global Function Declaraction */
 long _syscall(long n, long a1, long a2, long a3, long a4, long a5, long a6);
 fn __syscall(long syscall, long arg1, long arg2, long arg3, long arg4, long arg5, long arg6);

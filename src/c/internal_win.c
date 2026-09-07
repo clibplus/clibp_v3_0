@@ -1,5 +1,10 @@
 #include "../headers/fsl.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+    #define __FSL_WINDOWS__
+
+#include <stdio.h>
+#include <string.h>
 
 int __FSL_DEBUG__ = 0;
 char _OUTPUT_[1024] = {0};
@@ -36,3 +41,5 @@ void println(string x) { printf("%s\n", x); }
 
 public fn ptr_to_str(ptr p, string out)
 { sprintf(out, "%p", p); }
+
+#endif
